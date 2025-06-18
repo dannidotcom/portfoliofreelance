@@ -1,0 +1,64 @@
+{
+  "testimonials": [
+    {
+      "id": 1,
+      "quote": "Donné a transformé notre processus de recrutement grâce à l'IA. Nous avons réduit de 60% le temps de traitement des candidatures et amélioré la qualité des embauches. Son expertise en IA et sa compréhension de nos besoins métier ont fait toute la différence.",
+      "author": "Marie Dupont",
+      "position": "Directrice des Ressources Humaines",
+      "company": "TechCorp",
+      "avatar": "/placeholder.svg?height=80&width=80&text=MD",
+      "rating": 5,
+      "tags": ["IA", "Automatisation", "RH"],
+      "projectValue": "25 000€",
+      "resultMetric": "60% de gain de temps"
+    },
+    {
+      "id": 2,
+      "quote": "La solution Odoo personnalisée développée par Donné a révolutionné notre gestion interne. Les modules sur mesure et l'intégration d'outils IA ont permis d'optimiser nos processus et d'augmenter notre productivité de 40%. Un vrai partenaire technique et stratégique !",
+      "author": "Jean Martin",
+      "position": "Directeur Général",
+      "company": "InnovSolutions",
+      "avatar": "/placeholder.svg?height=80&width=80&text=JM",
+      "rating": 5,
+      "tags": ["Odoo", "ERP", "Modules personnalisés"],
+      "projectValue": "35 000€",
+      "resultMetric": "40% de productivité"
+    },
+    {
+      "id": 3,
+      "quote": "Grâce à l'agent IA développé par Donné, notre service client est désormais disponible 24/7 avec 80% des demandes traitées automatiquement. La qualité des réponses et la capacité d'apprentissage du système sont impressionnantes. Un investissement qui a rapidement été rentabilisé.",
+      "author": "Sophie Legrand",
+      "position": "Directrice Marketing",
+      "company": "E-Commerce Plus",
+      "avatar": "/placeholder.svg?height=80&width=80&text=SL",
+      "rating": 5,
+      "tags": ["IA Agentique", "Service Client", "Automatisation"],
+      "projectValue": "18 000€",
+      "resultMetric": "80% d'automatisation"
+    },
+    {
+      "id": 4,
+      "quote": "L'expertise DevOps de Donné nous a permis de moderniser notre infrastructure et d'adopter une approche CI/CD efficace. Nos déploiements sont maintenant 5 fois plus rapides et beaucoup plus fiables. Sa capacité à vulgariser des concepts techniques complexes a facilité l'adoption par toute l'équipe.",
+      "author": "Thomas Bernard",
+      "position": "Directeur Technique",
+      "company": "DataScale",
+      "avatar": "/placeholder.svg?height=80&width=80&text=TB",
+      "rating": 5,
+      "tags": ["DevOps", "CI/CD", "Docker"],
+      "projectValue": "12 000€",
+      "resultMetric": "5x plus rapide"
+    },
+    {
+      "id": 5,
+      "quote": "Le système de recommandation développé par Donné a augmenté nos ventes de 35% en seulement 2 mois. L'analyse comportementale en temps réel et la personnalisation des recommandations ont considérablement amélioré l'expérience utilisateur. Résultats au-delà de nos attentes !",
+      "author": "Claire Dubois",
+      "position": "Responsable E-commerce",
+      "company": "Fashion Store",
+      "avatar": "/placeholder.svg?height=80&width=80&text=CD",
+      "rating": 5,
+      "tags": ["Machine Learning", "E-commerce", "Recommandations"],
+      "projectValue": "22 000€",
+      "resultMetric": "35% de ventes"
+    }
+  ]
+}

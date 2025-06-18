@@ -1,0 +1,51 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "title": "JuriBot Mada Intelligent",
+      "description": "JuriBot Mada est une plateforme d'intelligence artificielle conçue pour rendre le droit accessible à tous les Malgaches.",
+      "shortDescription": "Un assistant intelligent pour simplifier l’accès au droit à Madagascar.",
+      "technologies": ["Python", "Next.js", "Django REST", "PostgreSQL", "LangChain"],
+      "category": "IA Agentique",
+      "gradient": "from-purple-600 to-blue-600",
+      "results": [
+        "60% de réduction du temps de traitement",
+        "Automatisation complète des workflows",
+        "Intégration IA native"
+      ],
+      "images": [
+        "./images/juribot-login.png",
+        "./images/juribot-home.png"
+      ],
+      "duration": "4 mois",
+      "team": "3 développeurs",
+      "client": "Entreprise manufacturière",
+      "githubUrl": "https://github.com/dannidotcom",
+      "demoUrl": "https://demo-erp.example.com",
+      "status": "Terminé",
+      "year": "2024"
+    },
+    {
+      "id": 2,
+      "title": "Agent IA pour Data Scraping",
+      "description": "Création d'un système d'IA agentique capable de scraper automatiquement du contenu web et de générer des réponses intelligentes basées sur les données collectées.",
+      "shortDescription": "Système d'IA agentique pour le scraping et l'analyse de données web",
+      "technologies": ["FastAPI", "LangChain", "LangGraph", "Qdrant", "SeleniumBase"],
+      "category": "IA Agentique",
+      "gradient": "from-blue-600 to-cyan-600",
+      "results": ["Scraping automatisé 24/7", "Recherche sémantique avancée", "Réponses contextuelles intelligentes"],
+      "images": [
+        "./images/portfolio.png",
+        "/placeholder.svg?height=400&width=600&text=Data+Visualization",
+        "/placeholder.svg?height=400&width=600&text=AI+Responses"
+      ],
+      "duration": "3 mois",
+      "team": "Solo",
+      "client": "Startup FinTech",
+      "githubUrl": "https://github.com/donnealphonse",
+      "demoUrl": "https://demo-scraper.example.com",
+      "status": "Terminé",
+      "year": "2024"
+    }
+  ]
+}
