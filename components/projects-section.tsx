@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ExternalLink, Github, ArrowRight, ChevronLeft, ChevronRight, Eye } from "lucide-react"
 import ImageCarousel from "@/components/image-carousel"
 import { motion } from "framer-motion"
-import projectsData from '../../data/projects.json';
+import projectsData from '../data/projects.json';
 
 interface Project {
   id: number
