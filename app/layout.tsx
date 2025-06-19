@@ -10,16 +10,18 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Donné Alphonse SOLOFONDRAIBE | Expert IA & Développement",
+  icons: {
+    icon: "/favicon.ico",              // pour navigateur
+    shortcut: "/favicon.ico",          // pour raccourcis
+    apple: "/favicon.png"              // pour Apple Touch icon
+  },
   description:
     "Développeur Fullstack Python spécialisé en IA et automatisation. Transformez vos données en solutions concrètes avec l'intelligence artificielle.",
-  //viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
-  //themeColor: "#667eea",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Donné Alphonse - Expert IA",
   },
-
 }
 
 export default function RootLayout({

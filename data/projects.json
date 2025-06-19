@@ -1,71 +1,165 @@
 {
-  "projects": [
-    {
-      "id": 1,
-      "title": "JuriBot Mada Intelligent",
-      "description": "JuriBot Mada est une plateforme d'intelligence artificielle conçue pour rendre le droit accessible à tous les Malgaches.",
-      "shortDescription": "Un assistant intelligent pour simplifier l’accès au droit à Madagascar.",
-      "technologies": ["Python", "Next.js", "Django REST", "PostgreSQL", "LangChain"],
-      "category": "IA Agentique",
-      "gradient": "from-purple-600 to-blue-600",
-      "results": [
-        "60% de réduction du temps de traitement",
-        "Automatisation complète des workflows",
-        "Intégration IA native"
-      ],
-      "images": [
-        "./images/jurbot-login.png",
-        "./images/jurbot-home.png"
-      ],
-      "duration": "4 mois",
-      "team": "3 développeurs",
-      "client": "Entreprise manufacturière",
-      "githubUrl": "https://github.com/dannidotcom",
-      "demoUrl": "https://demo-erp.example.com",
-      "status": "Terminé",
-      "year": "2024"
-    },
-    {
-      "id": 2,
-      "title": "Agent IA pour Data Scraping",
-      "description": "Création d'un système d'IA agentique capable de scraper automatiquement du contenu web et de générer des réponses intelligentes basées sur les données collectées.",
-      "shortDescription": "Système d'IA agentique pour le scraping et l'analyse de données web",
-      "technologies": ["FastAPI", "LangChain", "LangGraph", "Qdrant", "SeleniumBase"],
-      "category": "IA Agentique",
-      "gradient": "from-blue-600 to-cyan-600",
-      "results": ["Scraping automatisé 24/7", "Recherche sémantique avancée", "Réponses contextuelles intelligentes"],
-      "images": [
-        "/placeholder.svg?height=400&width=600&text=Data+Visualization",
-        "/placeholder.svg?height=400&width=600&text=AI+Responses"
-      ],
-      "duration": "3 mois",
-      "team": "Solo",
-      "client": "Startup FinTech",
-      "githubUrl": "https://github.com/donnealphonse",
-      "demoUrl": "https://demo-scraper.example.com",
-      "status": "Terminé",
-      "year": "2024"
-    },
-    {
-  "id": 2,
-  "title": "Mon Portfolio Développeur",
-  "description": "Développement d'un portfolio interactif et moderne mettant en avant mes compétences, projets et expériences, conçu avec React, Next.js et Python côté backend.",
-  "shortDescription": "Portfolio moderne avec React, Next.js et API Python",
-  "technologies": ["React", "Next.js", "Python", "Tailwind CSS", "Vercel"],
-  "category": "Développement Web",
-  "gradient": "from-purple-600 to-pink-600",
-  "results": ["Interface moderne responsive", "SEO optimisé avec Next.js", "Déploiement rapide via Vercel"],
-  "images": [
-    "./images/portfolio.png",
-    "./images/portfolio.png"
-  ],
-  "duration": "2 semaines",
-  "team": "Solo",
-  "client": "Personnel",
-  "githubUrl": "https://github.com/donnidotcom/portfolio",
-  "demoUrl": "https://portfolio.donnealphonse.dev",
-  "status": "Terminé",
-  "year": "2025"
-}
-  ]
+    "projects": [
+        {
+            "id": 1,
+            "title": "JuriBot Mada Intelligent",
+            "description": "JuriBot Mada est une plateforme d'intelligence artificielle conçue pour rendre le droit accessible à tous les Malgaches. Elle utilise GPT-4 via OpenAI pour répondre de manière intelligente aux questions juridiques, en malgache et en français.",
+            "shortDescription": "Un assistant intelligent pour simplifier l’accès au droit à Madagascar.",
+            "technologies": [
+                "Python",
+                "FastAPI",
+                "Next.js",
+                "LangChain",
+                "GPT-4 (OpenAI)",
+                "PostgreSQL",
+                "Tailwind CSS"
+            ],
+            "category": "IA Agentique",
+            "gradient": "from-purple-600 to-blue-600",
+            "results": [
+                "60% de réduction du temps de traitement",
+                "Automatisation complète des workflows",
+                "Intégration IA native avec GPT-4"
+            ],
+            "images": [
+                "./images/jurbot-login.png",
+                "./images/juri-forgotpasse.png",
+                "./images/jurbot-home.png",
+                "./images/fonctionnement.png",
+                "./images/dashboard.png"
+
+            ],
+            "duration": "En cours",
+            "team": "Solo",
+            "client": "Entreprise manufacturière",
+            "githubUrl": "https://github.com/dannidotcom",
+            "demoUrl": "https://demo-erp.example.com",
+            "status": "Terminé",
+            "year": "2024"
+        },
+        {
+            "id": 2,
+            "title": "AI-Recruteur – Simulateur d’entretien intelligent",
+            "description": "AI-Recruteur est un agent conversationnel intelligent développé avec FastAPI. Il simule un entretien d'embauche complet à partir d'une offre d'emploi, génère des questions techniques et RH, interagit avec le candidat, corrige ses réponses et fournit une évaluation finale.",
+            "shortDescription": "Simulateur d’entretien d’embauche intelligent pour développeurs et recruteurs.",
+            "technologies": [
+                "Python",
+                "FastAPI",
+                "LangChain",
+                "GPT-4 (OpenAI)",
+                "PostgreSQL",
+                "Tailwind CSS"
+            ],
+            "category": "IA RH & Formation",
+            "gradient": "from-green-600 to-indigo-600",
+            "results": [
+                "Préparation interactive aux entretiens techniques",
+                "Analyse automatisée des offres d’emploi",
+                "Évaluation assistée par IA en temps réel"
+            ],
+            "images": [
+                "./images/ai-recruter.png"
+            ],
+            "duration": "En cours",
+            "team": "Solo",
+            "client": "Formateurs & candidats",
+            "githubUrl": "https://github.com/dannidotcom/ai-recruteur",
+            "demoUrl": "#",
+            "status": "Prototype fonctionnel",
+            "year": "2025"
+        },
+        {
+            "id": 3,
+            "title": "ERP Open Source",
+            "description": "Développement d'un ERP open source complet pour la gestion d'entreprise, intégrant des fonctionnalités avancées de gestion des ressources humaines, de la comptabilité et de la production.",
+            "shortDescription": "ERP open source pour la gestion d'entreprise",
+            "technologies": [
+                "Python",
+                "Odoo",
+                "PostgreSQL",
+                "OWL",
+                "JavaScript",
+                "XML"
+            ],
+            "category": "Développement Web",
+            "gradient": "from-green-600 to-blue-600",
+            "results": [
+                "Automatisation des processus métier",
+                "Interface utilisateur intuitive",
+                "Intégration facile avec d'autres systèmes"
+            ],
+            "images": [
+                "./images/odoo.png"
+            ],
+            "duration": "6 mois",
+            "team": "Équipe de 3 personnes",
+            "client": "PME locale",
+            "githubUrl": "#",
+            "demoUrl": "#",
+            "status": "En cours",
+            "year": "2024"
+        },
+        {
+            "id": 4,
+            "title": "Agent IA pour Data Scraping",
+            "description": "Création d'un système d'IA agentique capable de scraper automatiquement du contenu web et de générer des réponses intelligentes basées sur les données collectées.",
+            "shortDescription": "Système d'IA agentique pour le scraping et l'analyse de données web",
+            "technologies": [
+                "Python",
+                "FastAPI",
+                "LangChain",
+                "LangGraph",
+                "Qdrant",
+                "SeleniumBase"
+            ],
+            "category": "IA Agentique",
+            "gradient": "from-blue-600 to-cyan-600",
+            "results": [
+                "Scraping automatisé 24/7",
+                "Recherche sémantique avancée",
+                "Réponses contextuelles intelligentes"
+            ],
+            "images": [
+                "/placeholder.svg?height=400&width=600&text=Data+Visualization",
+                "/placeholder.svg?height=400&width=600&text=AI+Responses"
+            ],
+            "duration": "3 mois",
+            "team": "Solo",
+            "client": "Startup FinTech",
+            "githubUrl": "#",
+            "demoUrl": "#",
+            "status": "Terminé",
+            "year": "2025"
+        },
+        {
+            "id": 5,
+            "title": "Mon Portfolio Développeur",
+            "description": "Développement d'un portfolio interactif et moderne mettant en avant mes compétences, projets et expériences, conçu avec React, Next.js et Python côté backend.",
+            "shortDescription": "Portfolio moderne avec React, Next.js et API Python",
+            "technologies": [
+                "React",
+                "Next.js",
+                "Python",
+                "Tailwind CSS"
+            ],
+            "category": "Développement Web",
+            "gradient": "from-purple-600 to-pink-600",
+            "results": [
+                "Interface moderne responsive",
+                "SEO optimisé avec Next.js",
+                "Déploiement rapide via Vercel"
+            ],
+            "images": [
+                "./images/portfolio.png",
+                "./images/portfolio.png"
+            ],
+            "duration": "2 semaines",
+            "team": "Solo",
+            "client": "Personnel",
+            "githubUrl": "https://github.com/dannidotcom/portfoliofreelance",
+            "demoUrl": "https://danni-alphonse.vercel.app",
+            "status": "Terminé",
+            "year": "2025"
+        }
+    ]
 }
