@@ -7,14 +7,40 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
 import { ArrowRight, Mail, Github, Linkedin, Twitter, Send, Brain } from "lucide-react"
+import { useState } from "react"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Logique d'inscription à la newsletter
-    alert("Merci pour votre inscription à la newsletter !")
+    setLoading(true)
+    setMessage("")
+
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setMessage("✅ Inscription réussie ! Vérifiez votre email.")
+        setEmail("")
+      } else {
+        setMessage(`❌ ${data.error || "Erreur lors de l'inscription."}`)
+      }
+    } catch (error) {
+      setMessage("❌ Erreur réseau. Veuillez réessayer.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -201,22 +227,30 @@ export default function Footer() {
               Recevez mes derniers articles et conseils sur l'IA et l'automatisation.
             </p>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="flex">
-                <Input
-                  type="email"
-                  placeholder="Votre email"
-                  required
-                  className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 rounded-r-none focus:ring-1 focus:ring-purple-500"
-                />
-                <Button
-                  type="submit"
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-l-none"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-slate-500">Je respecte votre vie privée. Désabonnez-vous à tout moment.</p>
-            </form>
+        <div className="flex">
+          <Input
+            type="email"
+            placeholder="Votre email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 rounded-r-none focus:ring-1 focus:ring-purple-500"
+          />
+          <Button
+            type="submit"
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-l-none"
+            disabled={loading}
+          >
+            {loading ? "..." : <Send className="h-4 w-4" />}
+          </Button>
+        </div>
+        {message && (
+          <p className={`text-sm ${message.startsWith("✅") ? "text-green-400" : "text-red-400"}`}>
+            {message}
+          </p>
+        )}
+        <p className="text-xs text-slate-500">Je respecte votre vie privée. Désabonnez-vous à tout moment.</p>
+      </form>
           </motion.div>
         </div>
 

@@ -255,7 +255,7 @@ export default function HeroSection() {
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-400">3+</div>
+                  <div className="text-2xl font-bold text-purple-400">4+</div>
                   <div className="text-xs text-muted-foreground">Années</div>
                 </div>
               </motion.div>
@@ -268,7 +268,7 @@ export default function HeroSection() {
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">50+</div>
+                  <div className="text-2xl font-bold text-blue-400">10+</div>
                   <div className="text-xs text-muted-foreground">Projets</div>
                 </div>
               </motion.div>
@@ -281,7 +281,7 @@ export default function HeroSection() {
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400">100%</div>
+                  <div className="text-2xl font-bold text-green-400">90%</div>
                   <div className="text-xs text-muted-foreground">Satisfaits</div>
                 </div>
               </motion.div>
