@@ -143,20 +143,21 @@ export default function HeroSection() {
 
             <motion.div className="flex flex-col sm:flex-row gap-4" variants={itemVariants}>
               <Button
+              onClick={() => window.location.href = "#contact"}
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-4 group shadow-lg shadow-purple-500/25"
               >
                 Discutons de votre projet
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button
+              {/* <Button
                 size="lg"
                 variant="outline"
                 className="border-border text-foreground hover:bg-accent text-lg px-8 py-4 group backdrop-blur-sm"
               >
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 Voir mes réalisations
-              </Button>
+              </Button> */}
             </motion.div>
 
             <motion.div className="flex items-center gap-4 text-sm text-muted-foreground" variants={itemVariants}>

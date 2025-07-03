@@ -68,10 +68,10 @@ export default function ServicesSection() {
                       >
                         <IconComponent className="h-8 w-8 text-white" />
                       </div>
-                      <div className="text-right">
+                      {/* <div className="text-right">
                         <div className="text-sm text-muted-foreground">À partir de</div>
                         <div className="text-lg font-bold text-foreground">{service.price}</div>
-                      </div>
+                      </div> */}
                     </div>
 
                     <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-blue-400 group-hover:bg-clip-text transition-all duration-300">

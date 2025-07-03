@@ -76,7 +76,7 @@ export default function Header() {
             >
               Services
             </motion.a>
-        
+
             <motion.a
               href="#faq"
               className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
@@ -107,6 +107,7 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
             >
               <Button
+              onClick={() => window.location.href = "#contact"}
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
               >
                 Discutons de votre projet
@@ -175,7 +176,12 @@ export default function Header() {
             >
               Contact
             </a>
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 w-full">
+            <Button
+                onClick={() => {
+                    setIsMenuOpen(false)
+                    window.location.href = "#contact"
+                }}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 w-full">
               Discutons de votre projet
             </Button>
           </div>

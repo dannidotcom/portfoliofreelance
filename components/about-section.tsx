@@ -137,8 +137,13 @@ export default function AboutSection() {
                 variant="outline"
                 className="border-gray-600 text-white hover:bg-gray-800 backdrop-blur-sm"
               >
-                <Download className="mr-2 h-4 w-4" />
-                Télécharger CV
+                <a
+                    href="https://drive.google.com/file/d/1oOm3CbSNTy1K7_IZi6GIz7ic9KJ03V_L/view?usp=drive_link"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <Download className="mr-2 h-4 w-4" />
+                    Télécharger CV
+                </a>
               </Button>
             </div>
           </motion.div>
