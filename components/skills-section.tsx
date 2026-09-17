@@ -1,119 +1,46 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Brain, Code, Database, Cloud, Cog, Globe } from "lucide-react"
+import { skillCategories } from "@/data/skills"
+import { Reveal, SectionHeading } from "@/components/reveal"
 
 export default function SkillsSection() {
-  const skillCategories = [
-    {
-      icon: <Brain className="h-8 w-8" />,
-      title: "Intelligence Artificielle & NLP",
-      color: "from-purple-600 to-purple-500",
-      skills: [
-        "Pandas",
-        "NumPy",
-        "Scikit-learn",
-        "SpaCy",
-        "NLTK",
-        "Transformers",
-        "LangChain",
-        "llama-index",
-        "OpenAI API",
-        "Llama",
-        "Mistral",
-        "GPT-3/4",
-        "DALL-E",
-      ],
-    },
-    {
-      icon: <Code className="h-8 w-8" />,
-      title: "Développement",
-      color: "from-blue-600 to-blue-500",
-      skills: [
-        "Python",
-        "Java",
-        "JavaScript",
-        "TypeScript",
-        "Django",
-        "FastAPI",
-        "SpringBoot",
-        "React",
-        "Angular",
-        "Microservices",
-        "REST API",
-        "SOAP",
-      ],
-    },
-    {
-      icon: <Database className="h-8 w-8" />,
-      title: "Bases de Données",
-      color: "from-green-600 to-green-500",
-      skills: ["PostgreSQL", "MySQL", "MongoDB", "Oracle", "SQL Server", "Qdrant", "Vector Databases"],
-    },
-    {
-      icon: <Cloud className="h-8 w-8" />,
-      title: "DevOps & Cloud",
-      color: "from-orange-600 to-orange-500",
-      skills: ["Docker", "Kubernetes", "GitHub Actions", "GitLab CI/CD", "Linux", "Ubuntu", "CentOS", "RHEL"],
-    },
-    {
-      icon: <Cog className="h-8 w-8" />,
-      title: "ERP & Automatisation",
-      color: "from-red-600 to-red-500",
-      skills: ["Odoo", "QWeb", "OWL", "Workflow Automation", "Business Process", "Custom Modules"],
-    },
-    {
-      icon: <Globe className="h-8 w-8" />,
-      title: "Méthodologies",
-      color: "from-cyan-600 to-cyan-500",
-      skills: ["Agile", "Scrum", "Kanban", "Git", "Jira", "Trello", "Project Management"],
-    },
-  ]
-
   return (
-    <section id="skills" className="py-24 relative">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 mb-4">
-            Expertise Technique
-          </Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            Compétences Techniques
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Une expertise complète en IA, développement et automatisation pour transformer vos idées en solutions
-            concrètes
-          </p>
-        </div>
+    <section id="skills" className="section-shell border-t border-white/[0.05] relative">
+      <div
+        className="absolute inset-0 pointer-events-none opacity-60"
+        style={{
+          background:
+            "radial-gradient(ellipse 50% 40% at 10% 60%, hsl(168 35% 18% / 0.12), transparent 55%)",
+        }}
+        aria-hidden
+      />
+      <div className="container relative">
+        <Reveal>
+          <SectionHeading
+            index="04"
+            eyebrow="Skills"
+            title="Compétences techniques"
+            description="Organisation par domaines d'ingénierie — uniquement les technologies réellement utilisées dans mon parcours."
+          />
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
           {skillCategories.map((category, index) => (
-            <Card
-              key={index}
-              className="bg-card/50 border-border/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-300 h-full"
-            >
-              <CardContent className="p-6 h-full flex flex-col">
-                <div className="flex items-center gap-4 mb-6">
-                  <div
-                    className={`bg-gradient-to-r ${category.color} w-12 h-12 rounded-xl flex items-center justify-center`}
-                  >
-                    {category.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">{category.title}</h3>
+            <Reveal key={category.id} delay={index * 0.05}>
+              <div className="panel panel-glow h-full p-6 md:p-7 transition-colors duration-300 hover:bg-white/[0.035]">
+                <div className="flex items-baseline justify-between gap-3 mb-5">
+                  <h3 className="font-display text-lg font-semibold text-champagne">{category.title}</h3>
+                  <span className="font-mono text-[10px] text-muted-foreground/50">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
-
-                <div className="flex flex-wrap gap-2 flex-grow">
-                  {category.skills.map((skill, skillIndex) => (
-                    <Badge
-                      key={skillIndex}
-                      variant="secondary"
-                      className="bg-muted text-muted-foreground hover:bg-muted/80 text-xs"
-                    >
+                <ul className="flex flex-wrap gap-2">
+                  {category.skills.map((skill) => (
+                    <li key={skill} className="chip !text-[11px] !px-2.5 !py-1">
                       {skill}
-                    </Badge>
+                    </li>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
+                </ul>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

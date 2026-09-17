@@ -6,19 +6,24 @@ const config = {
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./data/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
   prefix: "",
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.25rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1240px",
       },
     },
     extend: {
+      fontFamily: {
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -68,10 +73,15 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "fade-up": {
+          from: { opacity: "0", transform: "translateY(16px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-up": "fade-up 0.6s ease-out both",
       },
     },
   },

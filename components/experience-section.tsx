@@ -1,116 +1,127 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, Building } from "lucide-react"
+"use client"
+
+import { useState } from "react"
+import { ChevronDown } from "lucide-react"
+import { experiences } from "@/data/experience"
+import { Reveal, SectionHeading } from "@/components/reveal"
+import { cn } from "@/lib/utils"
 
 export default function ExperienceSection() {
-  const experiences = [
-    
-    {
-      period: "Février 2025 - Aujourd'hui",
-      company: "Freelance",
-      position: "Développeur Python - IA agentique et Data Scraping",
-      location: "Full remote",
-      description:
-        "Développement d'API REST pour automatiser le scraping et fournir les résultats aux utilisateurs. Conception d'agents IA capables de répondre aux questions en s'appuyant sur les données récupérées avec LLMs.",
-      technologies: ["Python", "FastAPI", "SeleniumBase", "GPT-4 (via OpenAI API)", "LangChain", "LangGraph", "SpaCy", "Docker", "Qdrant"],
-      current: true,
-    },
-    {
-      period: "Janvier 2024 - Janvier 2025",
-      company: "Advences (Primanet)",
-      position: "Développeur Python / Odoo",
-      location: "Full remote",
-      description:
-        "Conception et développement de modules personnalisés Odoo pour automatiser les processus métier. Développement d'API RESTful pour connecter Odoo à des modèles d'IA externes.",
-      technologies: ["Python", "Odoo", "Django REST Framework", "Docker", "JavaScript", "PostgreSQL", "Git"],
-      current: false,
-    },
-    {
-      period: "Juillet 2023 - Décembre 2023",
-      company: "Assurance ARO",
-      position: "Développeur Python / Django (Stage)",
-      location: "Madagascar",
-      description:
-        "Développement d'une API RESTful avec Django REST Framework pour intégrer les paiements entre le mobile banking et l'assurance ARO en temps réel.",
-      technologies: ["Python", "Django", "Django REST Framework", "PostgreSQL", "SQL Server", "React.js", "Docker", "Git"],
-      current: false,
-    },
-    {
-      period: "Mars 2022 - Juin 2023",
-      company: "Tan’IT Technologie",
-      position: "Développeur Web",
-      location: "Madagascar",
-      description:
-        "Collaboration avec les équipes projet pour le développement d’applications web, depuis l’analyse du cahier des charges jusqu’à la mise en production.",
-      technologies: ["Python", "Django", "Django REST Framework", "PostgreSQL", "React.js", "Docker", "Git"],
-      current: false,
-    },
-  ]
+  const [expanded, setExpanded] = useState<string | null>(experiences[0]?.id ?? null)
 
   return (
-    <section className="py-24 relative">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 mb-4">
-            Parcours Professionnel
-          </Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Mon Expérience
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Un parcours riche en projets d'IA et d'automatisation, de l'ERP aux solutions d'IA agentique
-          </p>
-        </div>
+    <section id="experience" className="section-shell border-t border-white/[0.05]">
+      <div className="container">
+        <Reveal>
+          <SectionHeading
+            index="05"
+            eyebrow="Experience"
+            title="Parcours professionnel"
+            description="Rôles, responsabilités et technologies — un fil chronologique centré sur l'ingénierie IA et le backend."
+          />
+        </Reveal>
 
-        <div className="space-y-8 max-w-4xl mx-auto">
-          {experiences.map((exp, index) => (
-            <Card
-              key={index}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/30 border-gray-700/50 backdrop-blur-sm hover:from-gray-800/70 hover:to-gray-900/50 transition-all duration-300"
-            >
-              <CardContent className="p-8">
-                <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                  <div className="lg:w-1/3 space-y-3">
-                    <div className="flex items-center gap-2 text-gray-400">
-                      <Calendar className="h-4 w-4" />
-                      <span className="text-sm">{exp.period}</span>
-                    </div>
-                    {exp.current && <Badge className="bg-green-600 hover:bg-green-700 text-white">En cours</Badge>}
-                  </div>
+        <div className="relative max-w-4xl">
+          <div
+            className="absolute left-[11px] top-3 bottom-3 w-px hidden sm:block bg-gradient-to-b from-primary/50 via-white/10 to-transparent"
+            aria-hidden
+          />
 
-                  <div className="lg:w-2/3 space-y-4">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-2">{exp.position}</h3>
-                      <div className="flex items-center gap-4 text-gray-300 mb-3">
-                        <div className="flex items-center gap-2">
-                          <Building className="h-4 w-4" />
-                          <span>{exp.company}</span>
+          <ol className="space-y-4">
+            {experiences.map((exp, index) => {
+              const open = expanded === exp.id
+              return (
+                <Reveal key={exp.id} delay={index * 0.04}>
+                  <li className="sm:pl-10 relative">
+                    <span
+                      className={cn(
+                        "hidden sm:block absolute left-1.5 top-7 h-3 w-3 rounded-full border-2 border-background",
+                        exp.current
+                          ? "bg-primary shadow-[0_0_16px_hsl(168_55%_42%/0.55)]"
+                          : "bg-muted-foreground/40",
+                      )}
+                      aria-hidden
+                    />
+                    <article
+                      className={cn(
+                        "panel transition-all duration-300",
+                        open ? "panel-glow bg-white/[0.035]" : "hover:bg-white/[0.03]",
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="w-full text-left p-5 md:p-6 focus-ring rounded-2xl"
+                        onClick={() => setExpanded(open ? null : exp.id)}
+                        aria-expanded={open}
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2.5">
+                              <h3 className="font-display text-lg font-semibold text-champagne">
+                                {exp.position}
+                              </h3>
+                              {exp.current ? (
+                                <span className="rounded-full bg-primary/15 text-accent-steel px-2.5 py-0.5 text-[10px] uppercase tracking-wider">
+                                  En cours
+                                </span>
+                              ) : null}
+                            </div>
+                            <p className="mt-1.5 text-sm text-muted-foreground">
+                              {exp.company} · {exp.location}
+                            </p>
+                            <p className="mt-3 text-sm text-muted-foreground/90 leading-relaxed line-clamp-2">
+                              {exp.description}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-end gap-3 shrink-0">
+                            <p className="text-[11px] md:text-xs text-muted-foreground text-right max-w-[9rem]">
+                              {exp.period}
+                            </p>
+                            <ChevronDown
+                              className={cn(
+                                "h-4 w-4 text-muted-foreground transition-transform duration-300",
+                                open && "rotate-180 text-primary",
+                              )}
+                            />
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>{exp.location}</span>
+                      </button>
+
+                      <div
+                        className={cn(
+                          "grid transition-[grid-template-rows] duration-300",
+                          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                        )}
+                      >
+                        <div className="overflow-hidden">
+                          <div className="px-5 md:px-6 pb-6 space-y-4 border-t border-white/[0.06] pt-5">
+                            <div>
+                              <h4 className="label-caps !tracking-[0.18em] mb-3">Responsabilités</h4>
+                              <ul className="space-y-2.5">
+                                {exp.responsibilities.map((item) => (
+                                  <li key={item} className="flex gap-2.5 text-sm text-muted-foreground">
+                                    <span className="mt-2 h-1 w-1 rounded-full bg-primary shrink-0" />
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {exp.technologies.map((tech) => (
+                                <span key={tech} className="chip !text-[11px] !px-2.5 !py-1">
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    <p className="text-gray-300 leading-relaxed">{exp.description}</p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech, techIndex) => (
-                        <Badge
-                          key={techIndex}
-                          variant="secondary"
-                          className="bg-gray-700/50 text-gray-300 hover:bg-gray-700"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                    </article>
+                  </li>
+                </Reveal>
+              )
+            })}
+          </ol>
         </div>
       </div>
     </section>
