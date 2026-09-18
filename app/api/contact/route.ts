@@ -21,15 +21,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Un ou plusieurs champs sont trop longs" }, { status: 400 })
     }
 
-    // Configuration du transporteur Nodemailer
+    const emailUser = process.env.EMAIL_USER
+    const emailPass = process.env.EMAIL_PASS
+
+    if (!emailUser || !emailPass) {
+      console.error("❌ EMAIL_USER / EMAIL_PASS manquants (Vercel → Settings → Environment Variables)")
+      return NextResponse.json(
+        { error: "Erreur de configuration email. Veuillez réessayer plus tard." },
+        { status: 500 },
+      )
+    }
+
+    // Configuration du transporteur Nodemailer (Gmail + mot de passe d'application)
     const transporter = nodemailer.createTransport({
-      //service: "gmail",
-      host: 'smtp.gmail.com',
+      host: "smtp.gmail.com",
       port: 587,
       secure: false,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: emailUser,
+        pass: emailPass,
       },
     })
 
@@ -38,8 +48,8 @@ export async function POST(request: NextRequest) {
 
     // Email pour vous (notification)
     const adminMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: "alphonse.danni@gmail.com",
+      from: emailUser,
+      to: process.env.EMAIL_TO || emailUser,
       subject: `🚀 Nouveau message de ${name}: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa; border-radius: 10px;">
@@ -92,7 +102,7 @@ export async function POST(request: NextRequest) {
 
     // Email de confirmation pour le client
     const clientMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: emailUser,
       to: email,
       subject: "✅ Message reçu - Donné Alphonse | Expert IA & Développement",
       html: `
