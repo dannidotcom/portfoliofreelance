@@ -62,13 +62,13 @@ export default async function GithubSection({ locale, index = "07" }: { locale: 
                     href={repo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={dict.github.openRepo(repo.name)}
                     className="panel group flex h-full flex-col p-5 transition-colors duration-300 hover:bg-white/[0.035] focus-ring"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <p className="font-mono text-sm font-medium text-champagne break-all">
                         <span className="text-muted-foreground">{github.user}/</span>
                         {repo.name}
+                        <span className="sr-only"> {dict.github.opensInNewTab}</span>
                       </p>
                       <ArrowUpRight
                         className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"

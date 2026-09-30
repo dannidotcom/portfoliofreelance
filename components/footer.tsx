@@ -48,7 +48,7 @@ export default function Footer({ locale }: { locale: Locale }) {
             </p>
           </div>
 
-          <nav aria-label={dict.a11y.mainNav}>
+          <nav aria-label={dict.a11y.footerNav}>
             <ul className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
               {links.map(([href, label]) => (
                 <li key={href}>

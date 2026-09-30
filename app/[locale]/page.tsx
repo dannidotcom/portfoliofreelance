@@ -20,7 +20,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   if (!isLocale(locale)) notFound()
 
   return (
-    <main id="main" className="min-h-screen overflow-x-hidden">
+    <main id="main" tabIndex={-1} className="outline-none min-h-screen overflow-x-hidden">
       <HeroSection locale={locale} />
       <FocusSection locale={locale} />
       <FeaturedProject locale={locale} />

@@ -30,7 +30,7 @@ export default async function NotesPage({ params }: { params: Params }) {
   const home = localePath(locale)
 
   return (
-    <main id="main" className="relative overflow-x-hidden pt-28 pb-24">
+    <main id="main" tabIndex={-1} className="outline-none relative overflow-x-hidden pt-28 pb-24">
       <div className="absolute inset-0 grid-atmosphere pointer-events-none opacity-30" aria-hidden />
       <div className="container relative max-w-4xl">
         <nav aria-label={dict.a11y.breadcrumb} className="mb-10">

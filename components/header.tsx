@@ -92,13 +92,13 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
       href={switchHref}
       hrefLang={otherLocale}
       lang={otherLocale}
-      aria-label={dict.a11y.switchTo}
       className="inline-flex h-9 items-center gap-1 rounded-full border border-white/10 px-3 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:border-white/20 hover:text-champagne focus-ring"
       onClick={() => setOpen(false)}
     >
       <span className={cn(locale === "fr" && "text-champagne")}>FR</span>
-      <span aria-hidden>/</span>
+      <span>/</span>
       <span className={cn(locale === "en" && "text-champagne")}>EN</span>
+      <span className="sr-only"> — {dict.a11y.switchTo}</span>
     </Link>
   )
 
