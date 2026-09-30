@@ -200,6 +200,95 @@ html {
   }
 }
 
+/* Step-by-step flows (engineering timeline + architecture diagrams) */
+[data-sequence="running"] .step-card {
+  opacity: 0.42;
+}
+
+.step-card {
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out,
+    border-color 300ms ease-in-out,
+    box-shadow 300ms ease-in-out;
+}
+
+[data-sequence="running"] .step-card.is-lit {
+  opacity: 1;
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+[data-sequence="running"] .step-card.is-current {
+  border-color: hsl(var(--primary) / 0.7);
+  box-shadow:
+    0 0 0 1px hsl(var(--primary) / 0.35),
+    0 0 28px -6px hsl(var(--primary) / 0.5);
+  transform: scale(1.03);
+}
+
+.flow-arrow-track {
+  stroke: hsl(0 0% 100% / 0.1);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.flow-arrow-line,
+.flow-arrow-head {
+  stroke: hsl(var(--primary));
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.flow-arrow-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 300ms ease-in-out;
+}
+
+.flow-arrow-head {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 150ms ease-in-out 200ms,
+    transform 200ms ease-in-out 150ms;
+}
+
+.flow-arrow-line.is-drawn {
+  stroke-dashoffset: 0;
+}
+
+.flow-arrow-head.is-drawn {
+  opacity: 1;
+  transform: none;
+}
+
+.diagram-edge {
+  transition: stroke-dashoffset 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+
+.diagram-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-card,
+  .flow-arrow-line,
+  .flow-arrow-head,
+  .diagram-edge,
+  .diagram-node {
+    transition: none;
+  }
+
+  [data-sequence="running"] .step-card.is-current {
+    transform: none;
+  }
+}
+
 .equalizer {
   display: inline-flex;
   height: 0.75rem;
