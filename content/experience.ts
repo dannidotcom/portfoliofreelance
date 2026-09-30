@@ -1,4 +1,7 @@
-import type { Localized } from "./types"
+import { todoText, type Localized } from "./types"
+
+/** 2–3 measurable outcomes per role (e.g. "p95 latency divided by 3"). Hidden while TODO. */
+const impactTodo = (): Localized[] => [todoText, todoText, todoText]
 
 export type Experience = {
   id: string
@@ -11,6 +14,7 @@ export type Experience = {
   location: Localized
   description: Localized
   responsibilities: Localized[]
+  impact: Localized[]
   technologies: string[]
 }
 
@@ -48,6 +52,7 @@ export const experiences: Experience[] = [
         en: "Supervision (monitoring, logs, security) and performance optimisation",
       },
     ],
+    impact: impactTodo(),
     technologies: [
       "Machine Learning",
       "LLMs",
@@ -93,6 +98,7 @@ export const experiences: Experience[] = [
         en: "Production deployment with Docker and CI/CD pipelines",
       },
     ],
+    impact: impactTodo(),
     technologies: ["Python", "FastAPI", "LangChain", "LangGraph", "Qdrant", "Pgvector", "Docker", "Transformers", "Ollama"],
   },
   {
@@ -131,6 +137,7 @@ export const experiences: Experience[] = [
         en: "Containerised architectures and CI/CD (GitHub Actions)",
       },
     ],
+    impact: impactTodo(),
     technologies: ["Python", "FastAPI", "LangChain", "LLMs", "RAG", "Qdrant", "PostgreSQL", "Docker", "Redis", "GitHub Actions"],
   },
   {
@@ -166,6 +173,7 @@ export const experiences: Experience[] = [
         en: "Migration and adaptation across version upgrades",
       },
     ],
+    impact: impactTodo(),
     technologies: ["Python", "Odoo", "Django REST Framework", "Docker", "JavaScript", "PostgreSQL", "OWL", "QWeb"],
   },
   {
@@ -197,6 +205,7 @@ export const experiences: Experience[] = [
         en: "User, role and permission management module",
       },
     ],
+    impact: impactTodo(),
     technologies: ["Python", "Django", "Django REST Framework", "PostgreSQL", "JavaScript", "REST API"],
   },
   {
@@ -222,6 +231,7 @@ export const experiences: Experience[] = [
       { fr: "Interfaces modernes selon standards UX/UI", en: "Modern interfaces following UX/UI standards" },
       { fr: "Correction de bugs et amélioration continue", en: "Bug fixing and continuous improvement" },
     ],
+    impact: impactTodo(),
     technologies: ["Python", "Django", "PostgreSQL", "React", "Redux", "Docker", "CI/CD", "Agile / Scrum"],
   },
 ]

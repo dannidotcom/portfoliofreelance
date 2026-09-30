@@ -136,6 +136,10 @@ const fr = {
       "Rôles, responsabilités et technologies — un fil chronologique centré sur Python, la data et l'ingénierie IA.",
     current: "En cours",
     present: "Aujourd'hui",
+    impact: "Impact",
+    technologies: "Technologies",
+    timeline: "Frise chronologique du parcours",
+    viewSkill: (tech: string) => `${tech} — voir la compétence`,
     responsibilities: "Responsabilités",
   },
   engineering: {
@@ -326,6 +330,10 @@ const en: Dictionary = {
     description: "Roles, responsibilities and technologies — a timeline focused on Python, data and AI engineering.",
     current: "Current",
     present: "Present",
+    impact: "Impact",
+    technologies: "Technologies",
+    timeline: "Career timeline",
+    viewSkill: (tech: string) => `${tech} — view skill`,
     responsibilities: "Responsibilities",
   },
   engineering: {
