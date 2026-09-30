@@ -437,8 +437,237 @@ export const dataPipelineDiagram: Diagram = {
   ],
 }
 
-export const diagrams = [sovereignEngineDiagram, dataPipelineDiagram]
+export const apiKeyAiDiagram: Diagram = {
+  id: "api-key-ai",
+  title: { fr: "IA métier via API (clé API)", en: "Business AI via API (API key)" },
+  description: {
+    fr: "Vue générique d'une IA métier qui s'appuie sur un fournisseur LLM externe : la clé API reste côté serveur et n'est jamais exposée au navigateur.",
+    en: "Generic view of business AI backed by an external LLM provider: the API key stays server-side and is never exposed to the browser.",
+  },
+  width: 1125,
+  height: 430,
+  nodes: [
+    {
+      id: "app",
+      label: { fr: "Application métier", en: "Business app" },
+      sub: { fr: "Consommateur de l'API", en: "API consumer" },
+      detail: {
+        fr: "L'application métier appelle uniquement le backend : elle ne détient jamais la clé du fournisseur LLM.",
+        en: "The business application only calls the backend: it never holds the LLM provider key.",
+      },
+      kind: "client",
+      x: col(0),
+      y: 190,
+    },
+    {
+      id: "api",
+      label: { fr: "API FastAPI", en: "FastAPI API" },
+      sub: { fr: "Authn · authz", en: "Authn · authz" },
+      detail: {
+        fr: "Authentification de l'appelant, contrôle de ses droits et validation des entrées avant tout appel au modèle.",
+        en: "Caller authentication, permission checks and input validation before any model call.",
+      },
+      kind: "service",
+      x: col(1),
+      y: 190,
+    },
+    {
+      id: "orchestrator",
+      label: { fr: "Orchestration", en: "Orchestration" },
+      sub: { fr: "Prompt · RAG · routage", en: "Prompt · RAG · routing" },
+      detail: {
+        fr: "Construction du prompt, ajout du contexte (RAG) si nécessaire et routage vers le modèle adapté à la tâche.",
+        en: "Prompt assembly, context injection (RAG) when needed and routing to the model suited to the task.",
+      },
+      kind: "service",
+      x: col(2),
+      y: 190,
+    },
+    {
+      id: "secrets",
+      label: { fr: "Gestion des secrets", en: "Secrets management" },
+      sub: { fr: "Env · secrets manager", en: "Env · secrets manager" },
+      detail: {
+        fr: "La clé est lue côté serveur (variable d'environnement ou gestionnaire de secrets, ex. os.environ[\"LLM_API_KEY\"]) et n'est jamais envoyée au navigateur.",
+        en: "The key is read server-side (environment variable or secrets manager, e.g. os.environ[\"LLM_API_KEY\"]) and is never sent to the browser.",
+      },
+      kind: "store",
+      x: col(3),
+      y: 346,
+    },
+    {
+      id: "provider",
+      label: { fr: "Fournisseur LLM", en: "LLM provider" },
+      sub: { fr: "API externe", en: "External API" },
+      detail: {
+        fr: "Le modèle est appelé via l'API HTTPS du fournisseur, authentifiée par la clé. Le prompt et son contexte quittent l'infrastructure.",
+        en: "The model is called through the provider's HTTPS API, authenticated with the key. The prompt and its context leave the infrastructure.",
+      },
+      kind: "model",
+      x: col(3),
+      y: 190,
+    },
+    {
+      id: "post",
+      label: { fr: "Post-traitement", en: "Post-processing" },
+      sub: { fr: "Validation · format", en: "Validation · format" },
+      detail: {
+        fr: "Validation de la sortie du modèle (schéma, garde-fous, filtrage) avant de la renvoyer à l'application.",
+        en: "Validation of the model output (schema, guardrails, filtering) before returning it to the application.",
+      },
+      kind: "service",
+      x: col(4),
+      y: 190,
+    },
+    {
+      id: "stream",
+      label: { fr: "Streaming", en: "Streaming" },
+      sub: { fr: "Réponse progressive", en: "Progressive answer" },
+      detail: {
+        fr: "La réponse est renvoyée à l'application au fil de la génération.",
+        en: "The answer is sent back to the application as it is generated.",
+      },
+      kind: "service",
+      x: col(5),
+      y: 190,
+    },
+    {
+      id: "monitoring",
+      label: { fr: "Logs · quotas · monitoring", en: "Logs · quotas · monitoring" },
+      sub: { fr: "Tokens · coûts · latence · erreurs", en: "Tokens · cost · latency · errors" },
+      detail: {
+        fr: "Journalisation des appels, quotas par utilisateur ou par tenant, suivi de la consommation de tokens, des coûts, de la latence et des erreurs.",
+        en: "Call logging, per-user or per-tenant quotas, tracking of token consumption, cost, latency and errors.",
+      },
+      kind: "ops",
+      x: col(0),
+      y: 346,
+      w: 345,
+    },
+  ],
+  edges: [
+    { from: "app", to: "api" },
+    { from: "api", to: "orchestrator" },
+    { from: "orchestrator", to: "secrets", fromSide: "bottom", toSide: "left", via: [[col(2) + 80, 378]] },
+    { from: "secrets", to: "provider", fromSide: "top", toSide: "bottom" },
+    { from: "provider", to: "post" },
+    { from: "post", to: "stream" },
+    { from: "stream", to: "app", fromSide: "top", toSide: "top", via: [[col(5) + 80, 70], [col(0) + 80, 70]] },
+    { from: "api", to: "monitoring", fromSide: "bottom", toSide: "top", toAt: col(1) + 80, dashed: true },
+  ],
+  captions: {
+    app: { fr: "Requête de l'application métier", en: "Business application request" },
+    api: { fr: "Requête → API (authn · authz)", en: "Request → API (authn · authz)" },
+    orchestrator: { fr: "API → prompt, contexte, routage", en: "API → prompt, context, routing" },
+    secrets: { fr: "Clé API lue côté serveur", en: "API key read server-side" },
+    provider: { fr: "Appel authentifié → fournisseur LLM", en: "Authenticated call → LLM provider" },
+    post: { fr: "Sortie du modèle → validation", en: "Model output → validation" },
+    stream: { fr: "Réponse streamée → application", en: "Streamed answer → application" },
+    monitoring: { fr: "Appels → logs, quotas, coûts", en: "Calls → logs, quotas, cost" },
+  },
+  adrs: [],
+}
 
+export const aiArchitectureTabs = [
+  { id: "on-premise", label: { fr: "On-premise souverain", en: "Sovereign on-premise" }, diagram: sovereignEngineDiagram },
+  { id: "api", label: { fr: "IA métier via API (clé API)", en: "Business AI via API (API key)" }, diagram: apiKeyAiDiagram },
+] as const satisfies readonly { id: string; label: Localized; diagram: Diagram }[]
+
+export type ArchitectureTabId = (typeof aiArchitectureTabs)[number]["id"]
+
+/** DOM id of a tab button; linking to `#architecture-tab-<id>` on the home page opens that tab. */
+export const ARCHITECTURE_TAB_PREFIX = "architecture-tab"
+export const architectureTabAnchor = (id: ArchitectureTabId) => `${ARCHITECTURE_TAB_PREFIX}-${id}`
+
+export type ComparisonRow = {
+  id: string
+  criterion: Localized
+  onPremise: Localized
+  api: Localized
+  /** TODO = hidden in production until the owner confirms the trade-off matches their experience. */
+  validated: true | Todo
+}
+
+export const deploymentComparison: ComparisonRow[] = [
+  {
+    id: "sovereignty",
+    criterion: { fr: "Souveraineté des données", en: "Data sovereignty" },
+    onPremise: {
+      fr: "Les données restent dans l'infrastructure.",
+      en: "Data stays inside the infrastructure.",
+    },
+    api: {
+      fr: "Le prompt et son contexte transitent chez le fournisseur ; rétention et localisation à vérifier contractuellement.",
+      en: "The prompt and its context go through the provider; retention and location must be checked contractually.",
+    },
+    validated: true,
+  },
+  {
+    id: "cost",
+    criterion: { fr: "Coût", en: "Cost" },
+    onPremise: {
+      fr: "Investissement GPU et exploitation ; coût marginal faible une fois l'infrastructure amortie.",
+      en: "GPU investment and operations; low marginal cost once the infrastructure is amortised.",
+    },
+    api: {
+      fr: "Aucune infrastructure GPU ; facturation à l'usage (tokens) qui croît avec le volume.",
+      en: "No GPU infrastructure; pay-per-use (tokens) billing that grows with volume.",
+    },
+    validated: TODO,
+  },
+  {
+    id: "latency",
+    criterion: { fr: "Latence", en: "Latency" },
+    onPremise: {
+      fr: "Dépend du matériel dimensionné ; pas d'aller-retour Internet.",
+      en: "Depends on the sized hardware; no Internet round trip.",
+    },
+    api: {
+      fr: "Aller-retour réseau et charge du fournisseur : variable selon le modèle et l'heure.",
+      en: "Network round trip and provider load: varies with the model and time of day.",
+    },
+    validated: TODO,
+  },
+  {
+    id: "compliance",
+    criterion: { fr: "Conformité", en: "Compliance" },
+    onPremise: {
+      fr: "Périmètre entièrement maîtrisé, adapté aux environnements réglementés.",
+      en: "Fully controlled perimeter, suited to regulated environments.",
+    },
+    api: {
+      fr: "Dépend du fournisseur : accord de traitement des données, région d'hébergement, certifications.",
+      en: "Depends on the provider: data processing agreement, hosting region, certifications.",
+    },
+    validated: true,
+  },
+  {
+    id: "maintenance",
+    criterion: { fr: "Maintenance", en: "Maintenance" },
+    onPremise: {
+      fr: "Modèles, drivers et capacité GPU à la charge de l'équipe.",
+      en: "Models, drivers and GPU capacity are the team's responsibility.",
+    },
+    api: {
+      fr: "Modèles maintenus par le fournisseur ; clés, quotas et changements de version d'API à gérer.",
+      en: "Models maintained by the provider; keys, quotas and API version changes to manage.",
+    },
+    validated: true,
+  },
+  {
+    id: "use-case",
+    criterion: { fr: "Cas d'usage adapté", en: "Suitable use case" },
+    onPremise: {
+      fr: "Données sensibles, secteurs réglementés, volume élevé et stable.",
+      en: "Sensitive data, regulated sectors, high and steady volume.",
+    },
+    api: {
+      fr: "Démarrage rapide, volume modéré ou variable, accès aux modèles les plus récents.",
+      en: "Fast start, moderate or variable volume, access to the latest models.",
+    },
+    validated: TODO,
+  },
+]
 export const juribotDiagram: Diagram = {
   id: "juribot",
   title: { fr: "Architecture de JuriBot", en: "JuriBot architecture" },

@@ -3,7 +3,7 @@ import type { Locale } from "./types"
 const fr = {
   meta: {
     description:
-      "Je conçois des plateformes de données et des systèmes d'IA fiables, de l'ingestion au serving LLM : Python, FastAPI, pipelines ETL/ELT, architecture de données, RAG et bases vectorielles.",
+      "Je conçois des plateformes de données et des systèmes d'IA fiables, de l'ingestion au serving LLM, on-premise ou via API : Python, FastAPI, pipelines ETL/ELT, architecture de données, RAG et bases vectorielles.",
     ogDescription:
       "Plateformes de données et systèmes d'IA fiables — Python, Data Architecture, Data Engineering, ETL/ELT, RAG, FastAPI.",
   },
@@ -82,13 +82,21 @@ const fr = {
     eyebrow: "Data & AI Architecture",
     title: "Comment je conçois les systèmes",
     description:
-      "Deux architectures types, de l'ingestion au serving LLM. Survolez ou parcourez les blocs au clavier pour le détail, puis lisez les décisions et leurs compromis.",
+      "Des architectures types, de l'ingestion au serving LLM — on-premise ou via API. Survolez ou parcourez les blocs au clavier pour le détail, puis lisez les décisions et leurs compromis.",
     hint: "Survol ou Tab pour le détail de chaque bloc, Échap pour fermer.",
     decisions: "Décisions d'architecture",
     context: "Contexte",
     decision: "Décision",
     tradeoffs: "Compromis",
     toValidate: "à valider",
+    aiTitle: "Intégrer un LLM : on-premise ou via API",
+    tabsLabel: "Mode de déploiement de l'IA",
+    comparison: {
+      title: "Comparatif on-premise / API",
+      criterion: "Critère",
+      onPremise: "On-premise souverain",
+      api: "Via API (clé API)",
+    },
   },
   projects: {
     eyebrow: "Projets",
@@ -101,6 +109,9 @@ const fr = {
     role: "Rôle",
     demo: "Démo",
     caseStudy: "Lire l'étude de cas",
+    architecture: "Voir l'architecture",
+    context: "Contexte",
+    facts: "Informations clés",
     filterLabel: "Filtrer par technologie",
     all: "Tous",
     count: (n: number) => `${n} projet${n > 1 ? "s" : ""}`,
@@ -274,7 +285,7 @@ export type Dictionary = typeof fr
 const en: Dictionary = {
   meta: {
     description:
-      "I design reliable data platforms and AI systems, from ingestion to LLM serving: Python, FastAPI, ETL/ELT pipelines, data architecture, RAG and vector databases.",
+      "I design reliable data platforms and AI systems, from ingestion to LLM serving, on-premise or via API: Python, FastAPI, ETL/ELT pipelines, data architecture, RAG and vector databases.",
     ogDescription:
       "Reliable data platforms and AI systems — Python, Data Architecture, Data Engineering, ETL/ELT, RAG, FastAPI.",
   },
@@ -353,13 +364,21 @@ const en: Dictionary = {
     eyebrow: "Data & AI Architecture",
     title: "How I design systems",
     description:
-      "Two reference architectures, from ingestion to LLM serving. Hover or tab through the blocks for details, then read the decisions and their trade-offs.",
+      "Reference architectures, from ingestion to LLM serving — on-premise or via API. Hover or tab through the blocks for details, then read the decisions and their trade-offs.",
     hint: "Hover or Tab for each block's details, Esc to close.",
     decisions: "Architecture decisions",
     context: "Context",
     decision: "Decision",
     tradeoffs: "Trade-offs",
     toValidate: "to validate",
+    aiTitle: "Integrating an LLM: on-premise or via API",
+    tabsLabel: "AI deployment mode",
+    comparison: {
+      title: "On-premise vs API comparison",
+      criterion: "Criterion",
+      onPremise: "Sovereign on-premise",
+      api: "Via API (API key)",
+    },
   },
   projects: {
     eyebrow: "Projects",
@@ -371,6 +390,9 @@ const en: Dictionary = {
     role: "Role",
     demo: "Demo",
     caseStudy: "Read the case study",
+    architecture: "View the architecture",
+    context: "Context",
+    facts: "Key facts",
     filterLabel: "Filter by technology",
     all: "All",
     count: (n: number) => `${n} project${n > 1 ? "s" : ""}`,

@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react"
 import { featuredProject as featured } from "@/content/projects"
 import { localePath } from "@/lib/i18n"
 import { caseStudyPath } from "@/lib/routes"
+import { isShown } from "@/lib/todo"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
@@ -81,14 +82,18 @@ export default function FeaturedProject({ locale }: { locale: Locale }) {
                     <dt className="text-muted-foreground text-xs uppercase tracking-wider">{dict.featured.role}</dt>
                     <dd className="mt-1.5 text-champagne font-medium leading-snug">{featured.role[locale]}</dd>
                   </div>
-                  <div>
-                    <dt className="text-muted-foreground text-xs uppercase tracking-wider">{dict.featured.status}</dt>
-                    <dd className="mt-1.5 text-foreground">{dict.status[featured.status]}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground text-xs uppercase tracking-wider">{dict.featured.year}</dt>
-                    <dd className="mt-1.5 text-foreground">{featured.year}</dd>
-                  </div>
+                  {isShown(featured.status) ? (
+                    <div>
+                      <dt className="text-muted-foreground text-xs uppercase tracking-wider">{dict.featured.status}</dt>
+                      <dd className="mt-1.5 text-foreground">{dict.status[featured.status]}</dd>
+                    </div>
+                  ) : null}
+                  {isShown(featured.year) ? (
+                    <div>
+                      <dt className="text-muted-foreground text-xs uppercase tracking-wider">{dict.featured.year}</dt>
+                      <dd className="mt-1.5 text-foreground">{featured.year}</dd>
+                    </div>
+                  ) : null}
                 </dl>
 
                 <div className="pt-2">
