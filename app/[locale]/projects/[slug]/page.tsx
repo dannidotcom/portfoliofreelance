@@ -154,7 +154,7 @@ export default async function CaseStudyPage({ params }: { params: Params }) {
     {
       id: "decisions",
       title: d.decisions,
-      content: decisions.length ? <AdrList adrs={decisions} locale={locale} /> : null,
+      content: decisions.length ? <AdrList adrs={decisions} locale={locale} level={3} /> : null,
     },
     {
       id: "results",
@@ -252,7 +252,7 @@ export default async function CaseStudyPage({ params }: { params: Params }) {
   }
 
   return (
-    <main id="main" className="relative overflow-x-hidden pt-28 pb-24">
+    <main id="main" tabIndex={-1} className="outline-none relative overflow-x-hidden pt-28 pb-24">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <div className="absolute inset-0 grid-atmosphere pointer-events-none opacity-30" aria-hidden />
 

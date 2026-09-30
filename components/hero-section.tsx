@@ -17,7 +17,7 @@ export default function HeroSection({ locale }: { locale: Locale }) {
       <div className="absolute inset-0 grid-atmosphere pointer-events-none opacity-40" aria-hidden />
 
       <div className="container relative z-10 grid min-h-[100svh] items-center gap-12 pt-28 pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10 xl:gap-16">
-        <div className="max-w-xl space-y-7 animate-fade-up">
+        <div className="max-w-xl space-y-7">
           <div className="space-y-4">
             <h1 className="font-display text-[2.4rem] sm:text-5xl md:text-[3.35rem] lg:text-[2.75rem] xl:text-[3.35rem] font-bold tracking-[-0.03em] text-champagne text-balance leading-[1.02]">
               {profile.fullName}

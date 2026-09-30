@@ -90,9 +90,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description: dict.meta.ogDescription,
     },
     icons: {
-      icon: "/favicon.ico",
-      shortcut: "/favicon.ico",
-      apple: "/images/favicon.png",
+      icon: { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      apple: "/apple-touch-icon.png",
     },
   }
 }

@@ -1,52 +1,12 @@
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-import { Github, Loader2, Mail, MapPin, Phone, Send } from "lucide-react"
+import { Github, Mail, MapPin, Phone } from "lucide-react"
 import { profile } from "@/content/profile"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
+import ContactForm from "@/components/contact/contact-form"
 
 export default function ContactSection({ locale, index = "08" }: { locale: Locale; index?: string }) {
   const dict = getDictionary(locale)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const form = e.currentTarget
-    setIsSubmitting(true)
-    setError(null)
-
-    const formData = new FormData(form)
-    const data = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      subject: formData.get("subject") as string,
-      message: formData.get("message") as string,
-    }
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (response.ok) {
-        setIsSubmitted(true)
-        form.reset()
-      } else {
-        setError(dict.contact.errorGeneric)
-      }
-    } catch {
-      setError(dict.contact.errorNetwork)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   const channels = [
     { icon: Mail, label: dict.contact.email, value: profile.email, href: `mailto:${profile.email}`, external: false },
@@ -121,68 +81,7 @@ export default function ContactSection({ locale, index = "08" }: { locale: Local
           </Reveal>
 
           <Reveal delay={0.1}>
-            {isSubmitted ? (
-              <div className="panel panel-glow p-8 md:p-10" role="status">
-                <p className="font-display text-2xl font-semibold text-champagne">{dict.contact.sentTitle}</p>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{dict.contact.sentBody}</p>
-                <button
-                  type="button"
-                  onClick={() => setIsSubmitted(false)}
-                  className="mt-8 text-sm text-primary hover:underline focus-ring rounded-md"
-                >
-                  {dict.contact.sendAnother}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="panel panel-glow space-y-4 p-6 md:p-8">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <label className="block space-y-2">
-                    <span className="text-xs text-muted-foreground">{dict.contact.name} *</span>
-                    <input name="name" required className="input-field" placeholder={dict.contact.namePlaceholder} />
-                  </label>
-                  <label className="block space-y-2">
-                    <span className="text-xs text-muted-foreground">{dict.contact.email} *</span>
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      className="input-field"
-                      placeholder={dict.contact.emailPlaceholder}
-                    />
-                  </label>
-                </div>
-                <label className="block space-y-2">
-                  <span className="text-xs text-muted-foreground">{dict.contact.subject} *</span>
-                  <input name="subject" required className="input-field" placeholder={dict.contact.subjectPlaceholder} />
-                </label>
-                <label className="block space-y-2">
-                  <span className="text-xs text-muted-foreground">{dict.contact.message} *</span>
-                  <textarea
-                    name="message"
-                    required
-                    rows={5}
-                    maxLength={2000}
-                    className="input-field resize-y min-h-[130px]"
-                    placeholder={dict.contact.messagePlaceholder}
-                  />
-                </label>
-
-                {error ? (
-                  <p className="text-sm text-red-400" role="alert">
-                    {error}
-                  </p>
-                ) : null}
-
-                <button type="submit" disabled={isSubmitting} className="btn-primary disabled:opacity-60">
-                  {isSubmitting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                  ) : (
-                    <Send className="h-4 w-4" aria-hidden />
-                  )}
-                  {dict.contact.send}
-                </button>
-              </form>
-            )}
+            <ContactForm locale={locale} />
           </Reveal>
         </div>
       </div>

@@ -3,14 +3,16 @@ import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { SHOW_TODOS, shown } from "@/lib/todo"
 
-export default function AdrList({ adrs, locale }: { adrs: Adr[]; locale: Locale }) {
+export default function AdrList({ adrs, locale, level = 4 }: { adrs: Adr[]; locale: Locale; level?: 3 | 4 }) {
   const dict = getDictionary(locale)
   const visible = shown(adrs, (adr) => adr.validated)
   if (!visible.length) return null
+  const Heading = `h${level}` as const
+  const ItemHeading = `h${level + 1}` as "h4" | "h5"
 
   return (
     <div>
-      <h4 className="label-caps mb-4">{dict.architecture.decisions}</h4>
+      <Heading className="label-caps mb-4">{dict.architecture.decisions}</Heading>
       <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {visible.map((adr) => (
           <li key={adr.id} className="panel h-full p-5 md:p-6">
@@ -24,9 +26,9 @@ export default function AdrList({ adrs, locale }: { adrs: Adr[]; locale: Locale 
                     </span>
                   ) : null}
                 </p>
-                <h5 id={`adr-${adr.id}`} className="font-display text-base font-semibold text-champagne leading-snug">
+                <ItemHeading id={`adr-${adr.id}`} className="font-display text-base font-semibold text-champagne leading-snug">
                   {adr.title[locale]}
-                </h5>
+                </ItemHeading>
               </header>
               <dl className="space-y-3 text-sm leading-relaxed">
                 <div>
