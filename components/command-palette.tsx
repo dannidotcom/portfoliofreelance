@@ -13,7 +13,6 @@ import {
   FolderGit2,
   Github,
   Hash,
-  Languages,
   Layers,
   Mail,
   NotebookPen,
@@ -21,20 +20,40 @@ import {
   User,
   Workflow,
 } from "lucide-react"
-import type { Locale } from "@/content/types"
+import { locales, type Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
+import { FlagFR, FlagGB } from "@/components/flags"
+import { localeNames, rememberLocale } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 export type PaletteProject = { slug: string; title: string; href: string; caseStudy: boolean; keywords: string }
 
 type Icon = ComponentType<SVGProps<SVGSVGElement>>
 
+function RoundFlagFR({ className }: SVGProps<SVGSVGElement>) {
+  return (
+    <span className={cn("overflow-hidden rounded-full ring-1 ring-white/15", className)}>
+      <FlagFR className="h-full w-full" />
+    </span>
+  )
+}
+
+function RoundFlagGB({ className }: SVGProps<SVGSVGElement>) {
+  return (
+    <span className={cn("overflow-hidden rounded-full ring-1 ring-white/15", className)}>
+      <FlagGB className="h-full w-full" />
+    </span>
+  )
+}
+
+const flagIcons: Record<Locale, Icon> = { fr: RoundFlagFR, en: RoundFlagGB }
+
 type Props = {
   locale: Locale
   open: boolean
   onOpenChange: (open: boolean) => void
   home: string
-  switchHref: string
+  localeHrefs: Record<Locale, string>
   cv: { href: string; fileName: string }
   email: string
   githubUrl: string
@@ -100,7 +119,7 @@ export default function CommandPalette({
   open,
   onOpenChange,
   home,
-  switchHref,
+  localeHrefs,
   cv,
   email,
   githubUrl,
@@ -208,13 +227,21 @@ export default function CommandPalette({
               </Command.Group>
 
               <Command.Group heading={p.actions} className={groupClass}>
-                <Item
-                  value="action-language"
-                  keywords={[p.switchLanguage, "language", "langue", "english", "français"]}
-                  icon={Languages}
-                  label={p.switchLanguage}
-                  onSelect={() => go(switchHref)}
-                />
+                {locales.map((target) => (
+                  <Item
+                    key={target}
+                    value={`action-language-${target}`}
+                    keywords={[localeNames[target], p.language, "language", "langue", target === "fr" ? "french" : "anglais"]}
+                    icon={flagIcons[target]}
+                    label={localeNames[target]}
+                    meta={target === locale ? p.currentLanguage : undefined}
+                    onSelect={() => {
+                      if (target === locale) return run(() => undefined)
+                      rememberLocale(target)
+                      go(localeHrefs[target])
+                    }}
+                  />
+                ))}
                 <Item
                   value="action-cv"
                   keywords={[p.downloadCv, "cv", "resume", "pdf"]}

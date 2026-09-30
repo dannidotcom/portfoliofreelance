@@ -48,14 +48,22 @@ test.describe("smoke", () => {
     await expect(page.locator("#projects")).toBeInViewport()
   })
 
-  test("language switch toggles between French and English", async ({ page }) => {
+  test("flag switcher toggles between French and English and remembers the choice", async ({ page, isMobile }) => {
     await page.goto("/")
-    await page.getByRole("link", { name: new RegExp(fr.a11y.switchTo) }).first().click()
+    const switcher = (label: string) => page.getByRole("group", { name: label }).filter({ visible: true }).first()
+
+    await openNav(page, isMobile)
+    await expect(switcher(fr.a11y.language).getByRole("link", { name: "Français" })).toHaveAttribute("aria-current", "true")
+    await switcher(fr.a11y.language).getByRole("link", { name: "English" }).click()
     await expect(page).toHaveURL(/\/en$/)
     await expect(page.locator("html")).toHaveAttribute("lang", "en")
     await expect(page.getByRole("heading", { level: 2, name: en.contact.title })).toBeAttached()
 
-    await page.getByRole("link", { name: new RegExp(en.a11y.switchTo) }).first().click()
+    await page.goto("/")
+    await expect(page).toHaveURL(/\/en$/)
+
+    if (isMobile) await page.getByRole("button", { name: en.a11y.openMenu }).click()
+    await switcher(en.a11y.language).getByRole("link", { name: "Français" }).click()
     await expect(page).toHaveURL(/\/$/)
     await expect(page.locator("html")).toHaveAttribute("lang", "fr")
   })

@@ -22,6 +22,17 @@ export function stripLocale(pathname: string): string {
 
 export const ogLocale: Record<Locale, string> = { fr: "fr_FR", en: "en_US" }
 
+/** Each language is named in its own language, whatever the current locale. */
+export const localeNames: Record<Locale, string> = { fr: "Français", en: "English" }
+
+/** Explicit language choice (flag click). Read by middleware.ts for unprefixed URLs. */
+export const LOCALE_COOKIE = "NEXT_LOCALE"
+export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
+
+export function rememberLocale(locale: Locale) {
+  document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`
+}
+
 export function alternatesFor(locale: Locale, path = "/") {
   return {
     canonical: localePath(locale, path),
