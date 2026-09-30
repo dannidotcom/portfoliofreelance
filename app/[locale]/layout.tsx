@@ -3,13 +3,16 @@ import type { Metadata, Viewport } from "next"
 import { notFound } from "next/navigation"
 import { Syne, Manrope } from "next/font/google"
 import "../globals.css"
-import Header from "@/components/header"
+import Header, { type HeaderPalette } from "@/components/header"
 import Footer from "@/components/footer"
 import { locales, type Locale } from "@/content/types"
 import { publishedNotes } from "@/content/notes"
 import { profile, siteUrl } from "@/content/profile"
+import { projects } from "@/content/projects"
 import { getDictionary } from "@/content/ui"
-import { alternatesFor, isLocale, ogLocale } from "@/lib/i18n"
+import { cvFileName, cvUrl } from "@/lib/cv"
+import { alternatesFor, isLocale, localePath, ogLocale } from "@/lib/i18n"
+import { caseStudyPath } from "@/lib/routes"
 import { isShown } from "@/lib/todo"
 
 const display = Syne({
@@ -113,6 +116,20 @@ function personJsonLd(locale: Locale) {
   }
 }
 
+function paletteData(locale: Locale): HeaderPalette {
+  const home = localePath(locale)
+  return {
+    projects: projects.map((project) => ({
+      slug: project.slug,
+      title: project.title[locale],
+      href: project.caseStudy ? localePath(locale, caseStudyPath(project.slug)) : `${home}#project-${project.slug}`,
+      caseStudy: Boolean(project.caseStudy),
+      keywords: project.technologies.join(" "),
+    })),
+    cv: { href: cvUrl(locale), fileName: cvFileName(locale) },
+  }
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -137,7 +154,7 @@ export default async function LocaleLayout({
         >
           {dict.a11y.skipToContent}
         </a>
-        <Header locale={locale} showNotes={publishedNotes().length > 0} />
+        <Header locale={locale} showNotes={publishedNotes().length > 0} palette={paletteData(locale)} />
         {children}
         <Footer locale={locale} />
       </body>
