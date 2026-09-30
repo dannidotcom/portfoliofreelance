@@ -414,3 +414,196 @@ export const dataPipelineDiagram: Diagram = {
 }
 
 export const diagrams = [sovereignEngineDiagram, dataPipelineDiagram]
+
+export const juribotDiagram: Diagram = {
+  id: "juribot",
+  title: { fr: "Architecture de JuriBot", en: "JuriBot architecture" },
+  description: {
+    fr: "Assistant conversationnel : interface Next.js, API FastAPI, orchestration LangChain et modèle GPT-4.",
+    en: "Conversational assistant: Next.js interface, FastAPI API, LangChain orchestration and GPT-4 model.",
+  },
+  width: col(4) + NODE_W + 20,
+  height: 290,
+  nodes: [
+    {
+      id: "user",
+      label: { fr: "Utilisateur", en: "User" },
+      sub: { fr: "Malgache · français", en: "Malagasy · French" },
+      detail: {
+        fr: "Question juridique posée en malgache ou en français.",
+        en: "Legal question asked in Malagasy or French.",
+      },
+      kind: "client",
+      x: col(0),
+      y: 40,
+    },
+    {
+      id: "ui",
+      label: { fr: "Interface", en: "Interface" },
+      sub: { fr: "Next.js · Tailwind", en: "Next.js · Tailwind" },
+      detail: {
+        fr: "Interface web conversationnelle (Next.js, Tailwind CSS).",
+        en: "Conversational web interface (Next.js, Tailwind CSS).",
+      },
+      kind: "client",
+      x: col(1),
+      y: 40,
+    },
+    {
+      id: "api",
+      label: { fr: "API", en: "API" },
+      sub: { fr: "FastAPI", en: "FastAPI" },
+      detail: {
+        fr: "API FastAPI qui reçoit les questions et orchestre la génération de la réponse.",
+        en: "FastAPI API receiving questions and orchestrating answer generation.",
+      },
+      kind: "service",
+      x: col(2),
+      y: 40,
+    },
+    {
+      id: "chain",
+      label: { fr: "Orchestration", en: "Orchestration" },
+      sub: { fr: "LangChain", en: "LangChain" },
+      detail: {
+        fr: "Chaîne LangChain : préparation du prompt et appel du modèle.",
+        en: "LangChain chain: prompt preparation and model call.",
+      },
+      kind: "service",
+      x: col(3),
+      y: 40,
+    },
+    {
+      id: "llm",
+      label: { fr: "LLM", en: "LLM" },
+      sub: { fr: "GPT-4", en: "GPT-4" },
+      detail: {
+        fr: "Modèle de langage GPT-4 qui génère la réponse.",
+        en: "GPT-4 language model generating the answer.",
+      },
+      kind: "model",
+      x: col(4),
+      y: 40,
+    },
+    {
+      id: "db",
+      label: { fr: "PostgreSQL", en: "PostgreSQL" },
+      sub: { fr: "Données applicatives", en: "Application data" },
+      detail: {
+        fr: "Base PostgreSQL de l'application.",
+        en: "Application PostgreSQL database.",
+      },
+      kind: "store",
+      x: col(2),
+      y: 200,
+    },
+  ],
+  edges: [
+    { from: "user", to: "ui" },
+    { from: "ui", to: "api" },
+    { from: "api", to: "chain" },
+    { from: "chain", to: "llm" },
+    { from: "api", to: "db", fromSide: "bottom", toSide: "top" },
+  ],
+  adrs: [],
+}
+
+export const scrapingAgentDiagram: Diagram = {
+  id: "scraping-agent",
+  title: { fr: "Architecture de l'agent de scraping", en: "Scraping agent architecture" },
+  description: {
+    fr: "Deux flux : l'indexation (scraping → embeddings → Qdrant) et la réponse (API → agents → recherche sémantique).",
+    en: "Two flows: indexing (scraping → embeddings → Qdrant) and answering (API → agents → semantic search).",
+  },
+  width: col(3) + NODE_W + 20,
+  height: 330,
+  nodes: [
+    {
+      id: "web",
+      label: { fr: "Sources web", en: "Web sources" },
+      sub: { fr: "Pages à collecter", en: "Pages to collect" },
+      detail: { fr: "Contenus web à collecter.", en: "Web content to collect." },
+      kind: "client",
+      x: col(0),
+      y: 40,
+    },
+    {
+      id: "scraper",
+      label: { fr: "Scraping", en: "Scraping" },
+      sub: { fr: "SeleniumBase", en: "SeleniumBase" },
+      detail: {
+        fr: "Collecte automatisée des pages avec SeleniumBase.",
+        en: "Automated page collection with SeleniumBase.",
+      },
+      kind: "service",
+      x: col(1),
+      y: 40,
+    },
+    {
+      id: "embed",
+      label: { fr: "Vectorisation", en: "Embedding" },
+      sub: { fr: "Embeddings", en: "Embeddings" },
+      detail: {
+        fr: "Découpage des contenus collectés et calcul des embeddings.",
+        en: "Chunking of collected content and embedding computation.",
+      },
+      kind: "model",
+      x: col(2),
+      y: 40,
+    },
+    {
+      id: "qdrant",
+      label: { fr: "Qdrant", en: "Qdrant" },
+      sub: { fr: "Recherche sémantique", en: "Semantic search" },
+      detail: {
+        fr: "Base vectorielle Qdrant interrogée par similarité.",
+        en: "Qdrant vector database queried by similarity.",
+      },
+      kind: "store",
+      x: col(3),
+      y: 40,
+    },
+    {
+      id: "client",
+      label: { fr: "Client", en: "Client" },
+      sub: { fr: "Question", en: "Question" },
+      detail: { fr: "Question posée au système.", en: "Question asked to the system." },
+      kind: "client",
+      x: col(0),
+      y: 240,
+    },
+    {
+      id: "api",
+      label: { fr: "API", en: "API" },
+      sub: { fr: "FastAPI", en: "FastAPI" },
+      detail: {
+        fr: "API FastAPI qui expose les agents.",
+        en: "FastAPI API exposing the agents.",
+      },
+      kind: "service",
+      x: col(1),
+      y: 240,
+    },
+    {
+      id: "agents",
+      label: { fr: "Agents IA", en: "AI agents" },
+      sub: { fr: "LangChain · LangGraph", en: "LangChain · LangGraph" },
+      detail: {
+        fr: "Agents LangChain / LangGraph qui interrogent la base vectorielle et composent une réponse contextuelle.",
+        en: "LangChain / LangGraph agents querying the vector database and composing a contextual answer.",
+      },
+      kind: "service",
+      x: col(2),
+      y: 240,
+    },
+  ],
+  edges: [
+    { from: "web", to: "scraper" },
+    { from: "scraper", to: "embed" },
+    { from: "embed", to: "qdrant" },
+    { from: "client", to: "api" },
+    { from: "api", to: "agents" },
+    { from: "agents", to: "qdrant", fromSide: "right", toSide: "bottom", via: [[col(3) + 80, 272]] },
+  ],
+  adrs: [],
+}

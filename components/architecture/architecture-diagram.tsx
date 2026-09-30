@@ -94,7 +94,8 @@ export default function ArchitectureDiagram({
       <div className="relative hidden lg:block">
         <svg
           viewBox={`0 0 ${diagram.width} ${diagram.height}`}
-          className="h-auto w-full select-none overflow-visible"
+          className="mx-auto h-auto w-full select-none overflow-visible"
+          style={{ maxWidth: diagram.width }}
           role="group"
           aria-label={`${diagram.title[locale]} — ${hint}`}
         >
