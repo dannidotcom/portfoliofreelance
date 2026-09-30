@@ -3,7 +3,7 @@ import { profile } from "@/content/profile"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
-import { cvUrl } from "@/lib/cv"
+import { cvFileName, cvUrl } from "@/lib/cv"
 
 export default function AboutSection({ locale, index = "07" }: { locale: Locale; index?: string }) {
   const dict = getDictionary(locale)
@@ -19,7 +19,7 @@ export default function AboutSection({ locale, index = "07" }: { locale: Locale;
                 <p key={paragraph.fr.slice(0, 32)}>{paragraph[locale]}</p>
               ))}
             </div>
-            <a href={cvUrl(locale)} target="_blank" rel="noopener noreferrer" className="btn-ghost mt-10">
+            <a href={cvUrl(locale)} download={cvFileName(locale)} className="btn-ghost mt-10">
               <Download className="h-4 w-4" aria-hidden />
               {dict.cta.downloadCv}
             </a>

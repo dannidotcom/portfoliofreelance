@@ -27,7 +27,8 @@ export const profile = {
   githubUser: "dannidotcom",
   linkedin: TODO as string | Todo,
   cv: {
-    fr: "https://drive.google.com/file/d/1C2MfjrsJ3-UNViCbGbn1s-d0VxuHunqc/view",
+    fr: "/cv-fr.pdf",
+    /** Drop the English PDF at public/cv-en.pdf, then set "/cv-en.pdf". Falls back to the French CV. */
     en: TODO as string | Todo,
   },
   about: [

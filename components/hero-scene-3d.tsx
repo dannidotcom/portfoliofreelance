@@ -10,25 +10,24 @@ const PYTHON_LINES = [
   "from fastapi import FastAPI, Depends",
   "from qdrant_client import QdrantClient",
   "",
-  "app = FastAPI(title='Sovereign AI Engine')",
-  "store = QdrantClient(url=env.QDRANT)",
+  "app = FastAPI(title='RAG API')",
+  "store = QdrantClient(url=settings.qdrant_url)",
   "",
-  "async def retrieve(query: str, tenant: str):",
-  "    vec = await embed(query)",
+  "async def retrieve(query: str, tenant_id: str):",
+  "    vector = await embed(query)",
   "    hits = store.search(",
-  "        collection_name='legal_corpus',",
-  "        query_vector=vec,",
-  "        query_filter=tenant_owns(tenant),",
+  "        collection_name='documents',",
+  "        query_vector=vector,",
+  "        query_filter=tenant_filter(tenant_id),",
   "        limit=8,",
   "    )",
   "    return rerank(hits, query)",
   "",
-  "@app.post('/api/chat/stream')",
+  "@app.post('/v1/chat')",
   "async def chat(body: ChatIn, user=Depends(auth)):",
-  "    docs = await retrieve(body.message, user.tenant)",
-  "    prompt = render_rag(docs, body.message)",
-  "    async for token in vllm.stream(prompt):",
-  "        yield sse(token)",
+  "    docs = await retrieve(body.message, user.tenant_id)",
+  "    prompt = build_prompt(docs, body.message)",
+  "    return stream(llm.generate(prompt))",
 ]
 
 function createCodeTexture() {
@@ -68,7 +67,7 @@ function createCodeTexture() {
     ctx.fill()
     ctx.fillStyle = "#7f93a3"
     ctx.font = "14px ui-monospace, monospace"
-    ctx.fillText("engine/rag_api.py — vLLM · RAG · FastAPI", 90, 22)
+    ctx.fillText("app/chat.py — FastAPI · RAG", 90, 22)
 
     ctx.font = "21px ui-monospace, SFMono-Regular, Menlo, monospace"
     let y = 68 - (offset % 28)
