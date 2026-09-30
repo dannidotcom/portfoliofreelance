@@ -1,9 +1,25 @@
-import Link from "next/link"
-import { Github, Mail } from "lucide-react"
-import { profile } from "@/data/profile"
+import { Github, Linkedin, Mail } from "lucide-react"
+import { profile } from "@/content/profile"
+import type { Locale } from "@/content/types"
+import { getDictionary } from "@/content/ui"
+import { localePath } from "@/lib/i18n"
+import { isShown } from "@/lib/todo"
 
-export default function Footer() {
+export default function Footer({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
   const year = new Date().getFullYear()
+  const home = localePath(locale)
+
+  const links: [string, string][] = [
+    [`${home}#projects`, dict.nav.projects],
+    [`${home}#skills`, dict.nav.skills],
+    [`${home}#experience`, dict.nav.experience],
+    [`${home}#about`, dict.nav.about],
+    [`${home}#contact`, dict.nav.contact],
+  ]
+
+  const iconClass =
+    "inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground hover:text-champagne hover:border-white/20 transition-colors focus-ring"
 
   return (
     <footer className="border-t border-white/[0.06] relative overflow-hidden">
@@ -23,51 +39,55 @@ export default function Footer() {
               <span className="text-primary">.</span>
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {profile.title} — systèmes IA souverains, backend et architectures prêtes pour la production.
+              {profile.title} — {dict.footer.tagline}
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-            {[
-              ["#about", "About"],
-              ["#experience", "Experience"],
-              ["#projects", "Projects"],
-              ["#skills", "Skills"],
-              ["#contact", "Contact"],
-            ].map(([href, label]) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-muted-foreground hover:text-champagne transition-colors duration-300"
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
+          <nav aria-label={dict.a11y.mainNav}>
+            <ul className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
+              {links.map(([href, label]) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    className="rounded-md text-muted-foreground hover:text-champagne transition-colors duration-300 focus-ring"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-white/[0.06] pt-7">
-          <p className="text-xs text-muted-foreground/70">
-            © {year} {profile.fullName}. Tous droits réservés.
+          <p className="text-xs text-muted-foreground">
+            © {year} {profile.fullName}. {dict.footer.rights}
           </p>
-          <div className="flex items-center gap-3">
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground hover:text-champagne hover:border-white/20 transition-colors"
-              aria-label="GitHub"
-            >
-              <Github className="h-4 w-4" />
-            </a>
-            <a
-              href={`mailto:${profile.email}`}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground hover:text-champagne hover:border-white/20 transition-colors"
-              aria-label="Email"
-            >
-              <Mail className="h-4 w-4" />
-            </a>
-          </div>
+          <ul aria-label={dict.a11y.social} className="flex items-center gap-3">
+            <li>
+              <a href={profile.github} target="_blank" rel="noopener noreferrer" className={iconClass} aria-label="GitHub">
+                <Github className="h-4 w-4" />
+              </a>
+            </li>
+            {isShown(profile.linkedin) ? (
+              <li>
+                <a
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={iconClass}
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </li>
+            ) : null}
+            <li>
+              <a href={`mailto:${profile.email}`} className={iconClass} aria-label="Email">
+                <Mail className="h-4 w-4" />
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>

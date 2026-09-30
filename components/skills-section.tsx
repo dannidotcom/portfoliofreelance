@@ -1,7 +1,11 @@
-import { skillCategories } from "@/data/skills"
+import { skillCategories } from "@/content/skills"
+import type { Locale } from "@/content/types"
+import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
 
-export default function SkillsSection() {
+export default function SkillsSection({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
+
   return (
     <section id="skills" className="section-shell border-t border-white/[0.05] relative">
       <div
@@ -16,9 +20,9 @@ export default function SkillsSection() {
         <Reveal>
           <SectionHeading
             index="04"
-            eyebrow="Skills"
-            title="Compétences techniques"
-            description="Organisation par domaines d'ingénierie — uniquement les technologies réellement utilisées dans mon parcours."
+            eyebrow={dict.skills.eyebrow}
+            title={dict.skills.title}
+            description={dict.skills.description}
           />
         </Reveal>
 
@@ -28,7 +32,7 @@ export default function SkillsSection() {
               <div className="panel panel-glow h-full p-6 md:p-7 transition-colors duration-300 hover:bg-white/[0.035]">
                 <div className="flex items-baseline justify-between gap-3 mb-5">
                   <h3 className="font-display text-lg font-semibold text-champagne">{category.title}</h3>
-                  <span className="font-mono text-[10px] text-muted-foreground/50">
+                  <span className="font-mono text-[10px] text-muted-foreground" aria-hidden>
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>

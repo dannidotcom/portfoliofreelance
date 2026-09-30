@@ -1,16 +1,20 @@
-import { profile } from "@/data/profile"
+import { profile } from "@/content/profile"
+import type { Locale } from "@/content/types"
+import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
 
-export default function FocusSection() {
+export default function FocusSection({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
+
   return (
     <section id="focus" className="section-shell border-t border-white/[0.05]">
       <div className="container">
         <Reveal>
           <SectionHeading
             index="01"
-            eyebrow="Positionnement"
-            title="Domaines d'expertise"
-            description="Un profil orienté ingénierie IA et backend, centré sur la conception de systèmes fiables plutôt que sur des démonstrations isolées."
+            eyebrow={dict.focus.eyebrow}
+            title={dict.focus.title}
+            description={dict.focus.description}
           />
         </Reveal>
 

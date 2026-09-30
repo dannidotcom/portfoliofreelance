@@ -3,20 +3,24 @@
 import type React from "react"
 import { useState } from "react"
 import { Github, Loader2, Mail, MapPin, Phone, Send } from "lucide-react"
-import { profile } from "@/data/profile"
+import { profile } from "@/content/profile"
+import type { Locale } from "@/content/types"
+import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
 
-export default function ContactSection() {
+export default function ContactSection({ locale, index = "08" }: { locale: Locale; index?: string }) {
+  const dict = getDictionary(locale)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
     setIsSubmitting(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const data = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
@@ -30,20 +34,31 @@ export default function ContactSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
-      const result = await response.json()
 
       if (response.ok) {
         setIsSubmitted(true)
-        e.currentTarget.reset()
+        form.reset()
       } else {
-        setError(result.error || "Erreur lors de l'envoi du message")
+        setError(dict.contact.errorGeneric)
       }
     } catch {
-      setError("Erreur de connexion. Veuillez réessayer.")
+      setError(dict.contact.errorNetwork)
     } finally {
       setIsSubmitting(false)
     }
   }
+
+  const channels = [
+    { icon: Mail, label: dict.contact.email, value: profile.email, href: `mailto:${profile.email}`, external: false },
+    {
+      icon: Phone,
+      label: dict.contact.phone,
+      value: profile.phone,
+      href: `tel:${profile.phone.replace(/\s/g, "")}`,
+      external: false,
+    },
+    { icon: Github, label: "GitHub", value: "github.com/dannidotcom", href: profile.github, external: true },
+  ]
 
   return (
     <section id="contact" className="section-shell border-t border-white/[0.05] relative overflow-hidden">
@@ -59,48 +74,29 @@ export default function ContactSection() {
       <div className="container relative">
         <Reveal>
           <SectionHeading
-            index="08"
-            eyebrow="Contact"
-            title="Discutons de votre prochain système IA"
-            description="Une question technique, une mission, ou un besoin d'architecture — écrivez-moi."
+            index={index}
+            eyebrow={dict.contact.eyebrow}
+            title={dict.contact.title}
+            description={dict.contact.description}
           />
         </Reveal>
 
         <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-14 max-w-5xl">
           <Reveal delay={0.05}>
             <ul className="space-y-1">
-              {[
-                {
-                  icon: Mail,
-                  label: "Email",
-                  value: profile.email,
-                  href: `mailto:${profile.email}`,
-                },
-                {
-                  icon: Phone,
-                  label: "Téléphone",
-                  value: profile.phone,
-                  href: `tel:${profile.phone.replace(/\s/g, "")}`,
-                },
-                {
-                  icon: Github,
-                  label: "GitHub",
-                  value: "github.com/dannidotcom",
-                  href: profile.github,
-                },
-              ].map((item) => (
-                <li key={item.label}>
+              {channels.map((item) => (
+                <li key={item.href}>
                   <a
                     href={item.href}
-                    target={item.label === "GitHub" ? "_blank" : undefined}
-                    rel={item.label === "GitHub" ? "noopener noreferrer" : undefined}
-                    className="group flex items-start gap-4 rounded-2xl p-4 -mx-4 transition-colors hover:bg-white/[0.03]"
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noopener noreferrer" : undefined}
+                    className="group flex items-start gap-4 rounded-2xl p-4 -mx-4 transition-colors hover:bg-white/[0.03] focus-ring"
                   >
                     <span className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-primary group-hover:border-primary/30 transition-colors">
-                      <item.icon className="h-4 w-4" />
+                      <item.icon className="h-4 w-4" aria-hidden />
                     </span>
                     <span>
-                      <span className="block text-[11px] uppercase tracking-[0.2em] text-muted-foreground/70 mb-1">
+                      <span className="block text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
                         {item.label}
                       </span>
                       <span className="text-sm text-champagne group-hover:text-white transition-colors">
@@ -112,13 +108,13 @@ export default function ContactSection() {
               ))}
               <li className="flex items-start gap-4 rounded-2xl p-4 -mx-4">
                 <span className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-primary">
-                  <MapPin className="h-4 w-4" />
+                  <MapPin className="h-4 w-4" aria-hidden />
                 </span>
                 <span>
-                  <span className="block text-[11px] uppercase tracking-[0.2em] text-muted-foreground/70 mb-1">
-                    Localisation
+                  <span className="block text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                    {dict.contact.location}
                   </span>
-                  <span className="text-sm text-champagne">{profile.location}</span>
+                  <span className="text-sm text-champagne">{profile.location[locale]}</span>
                 </span>
               </li>
             </ul>
@@ -126,63 +122,64 @@ export default function ContactSection() {
 
           <Reveal delay={0.1}>
             {isSubmitted ? (
-              <div className="panel panel-glow p-8 md:p-10">
-                <p className="font-display text-2xl font-semibold text-champagne">Message envoyé</p>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                  Merci. Je vous répondrai dès que possible.
-                </p>
+              <div className="panel panel-glow p-8 md:p-10" role="status">
+                <p className="font-display text-2xl font-semibold text-champagne">{dict.contact.sentTitle}</p>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{dict.contact.sentBody}</p>
                 <button
                   type="button"
                   onClick={() => setIsSubmitted(false)}
-                  className="mt-8 text-sm text-primary hover:underline"
+                  className="mt-8 text-sm text-primary hover:underline focus-ring rounded-md"
                 >
-                  Envoyer un autre message
+                  {dict.contact.sendAnother}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="panel panel-glow space-y-4 p-6 md:p-8">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <label className="block space-y-2">
-                    <span className="text-xs text-muted-foreground">Nom *</span>
-                    <input name="name" required className="input-field" placeholder="Votre nom" />
+                    <span className="text-xs text-muted-foreground">{dict.contact.name} *</span>
+                    <input name="name" required className="input-field" placeholder={dict.contact.namePlaceholder} />
                   </label>
                   <label className="block space-y-2">
-                    <span className="text-xs text-muted-foreground">Email *</span>
+                    <span className="text-xs text-muted-foreground">{dict.contact.email} *</span>
                     <input
                       name="email"
                       type="email"
                       required
                       className="input-field"
-                      placeholder="votre@email.com"
+                      placeholder={dict.contact.emailPlaceholder}
                     />
                   </label>
                 </div>
                 <label className="block space-y-2">
-                  <span className="text-xs text-muted-foreground">Sujet *</span>
-                  <input
-                    name="subject"
-                    required
-                    className="input-field"
-                    placeholder="Sujet de votre message"
-                  />
+                  <span className="text-xs text-muted-foreground">{dict.contact.subject} *</span>
+                  <input name="subject" required className="input-field" placeholder={dict.contact.subjectPlaceholder} />
                 </label>
                 <label className="block space-y-2">
-                  <span className="text-xs text-muted-foreground">Message *</span>
+                  <span className="text-xs text-muted-foreground">{dict.contact.message} *</span>
                   <textarea
                     name="message"
                     required
                     rows={5}
                     maxLength={2000}
                     className="input-field resize-y min-h-[130px]"
-                    placeholder="Contexte, objectif, contraintes techniques..."
+                    placeholder={dict.contact.messagePlaceholder}
                   />
                 </label>
 
-                {error ? <p className="text-sm text-red-400">{error}</p> : null}
+                {error ? (
+                  <p className="text-sm text-red-400" role="alert">
+                    {error}
+                  </p>
+                ) : null}
 
                 <button type="submit" disabled={isSubmitting} className="btn-primary disabled:opacity-60">
-                  {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                  Envoyer
+                  {isSubmitting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  ) : (
+                    <Send className="h-4 w-4" aria-hidden />
+                  )}
+                  {dict.contact.send}
                 </button>
               </form>
             )}
