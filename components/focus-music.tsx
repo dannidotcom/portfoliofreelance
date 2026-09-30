@@ -1,201 +1,231 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { Pause, Play } from "lucide-react"
+import { useCallback, useEffect, useId, useRef, useState } from "react"
+import { Loader2, Pause, Play, Volume2, VolumeX } from "lucide-react"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
+import { createFocusAudioSource, focusAudio } from "@/lib/audio/config"
+import type { AudioErrorKind, AudioSource } from "@/lib/audio/types"
+import { cn } from "@/lib/utils"
 
-/** Build a short looping focus track as WAV (audible, reliable on click). */
-async function buildFocusTrack(): Promise<Blob> {
-  const sampleRate = 44100
-  const duration = 8
-  const offline = new OfflineAudioContext(2, sampleRate * duration, sampleRate)
+type Status = "idle" | "loading" | "playing" | "paused" | "error"
 
-  const master = offline.createGain()
-  master.gain.value = 0.55
-  master.connect(offline.destination)
+const STORAGE = { volume: "focus-music:volume", muted: "focus-music:muted" } as const
+/** If playback has not started this long after a click, the browser most likely blocked it. */
+const BLOCKED_AFTER_MS = 5000
 
-  const tones = [
-    { f: 98, g: 0.22, type: "sine" as OscillatorType, pan: -0.35 },
-    { f: 146.83, g: 0.16, type: "sine" as OscillatorType, pan: 0.25 },
-    { f: 196, g: 0.1, type: "triangle" as OscillatorType, pan: 0.4 },
-    { f: 293.66, g: 0.07, type: "sine" as OscillatorType, pan: -0.15 },
-  ]
-
-  tones.forEach(({ f, g, type, pan }) => {
-    const osc = offline.createOscillator()
-    const gain = offline.createGain()
-    const filter = offline.createBiquadFilter()
-    const panner = offline.createStereoPanner()
-    osc.type = type
-    osc.frequency.value = f
-    filter.type = "lowpass"
-    filter.frequency.value = 1200
-    gain.gain.value = g
-    panner.pan.value = pan
-    osc.connect(filter)
-    filter.connect(gain)
-    gain.connect(panner)
-    panner.connect(master)
-    osc.start(0)
-    osc.stop(duration)
-  })
-
-  // Noise bed
-  const noiseLen = sampleRate * duration
-  const noiseBuf = offline.createBuffer(1, noiseLen, sampleRate)
-  const ch = noiseBuf.getChannelData(0)
-  for (let i = 0; i < noiseLen; i++) ch[i] = (Math.random() * 2 - 1) * 0.04
-  const noise = offline.createBufferSource()
-  noise.buffer = noiseBuf
-  const nFilter = offline.createBiquadFilter()
-  nFilter.type = "bandpass"
-  nFilter.frequency.value = 480
-  nFilter.Q.value = 0.7
-  const nGain = offline.createGain()
-  nGain.gain.value = 0.45
-  noise.connect(nFilter)
-  nFilter.connect(nGain)
-  nGain.connect(master)
-  noise.start(0)
-
-  // Soft pulse rhythm (not a beat drop — concentration)
-  for (let i = 0; i < 16; i++) {
-    const t = i * 0.5
-    const click = offline.createOscillator()
-    const cg = offline.createGain()
-    click.type = "sine"
-    click.frequency.value = 180
-    cg.gain.setValueAtTime(0.0001, t)
-    cg.gain.exponentialRampToValueAtTime(0.08, t + 0.02)
-    cg.gain.exponentialRampToValueAtTime(0.0001, t + 0.25)
-    click.connect(cg)
-    cg.connect(master)
-    click.start(t)
-    click.stop(t + 0.3)
+function readStorage(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key)
+  } catch {
+    return null
   }
-
-  const rendered = await offline.startRendering()
-  return audioBufferToWavBlob(rendered)
 }
 
-function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
-  const numChannels = buffer.numberOfChannels
-  const sampleRate = buffer.sampleRate
-  const format = 1
-  const bitDepth = 16
-  const samples = buffer.length
-  const blockAlign = (numChannels * bitDepth) / 8
-  const byteRate = sampleRate * blockAlign
-  const dataSize = samples * blockAlign
-  const arrayBuffer = new ArrayBuffer(44 + dataSize)
-  const view = new DataView(arrayBuffer)
+function clearTimer(timer: { current: ReturnType<typeof setTimeout> | null }) {
+  if (timer.current) clearTimeout(timer.current)
+  timer.current = null
+}
 
-  const writeStr = (offset: number, str: string) => {
-    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i))
+function writeStorage(key: string, value: string) {
+  try {
+    window.localStorage.setItem(key, value)
+  } catch {
+    /* storage disabled (private mode, quota): preferences are simply not remembered */
   }
-
-  writeStr(0, "RIFF")
-  view.setUint32(4, 36 + dataSize, true)
-  writeStr(8, "WAVE")
-  writeStr(12, "fmt ")
-  view.setUint32(16, 16, true)
-  view.setUint16(20, format, true)
-  view.setUint16(22, numChannels, true)
-  view.setUint32(24, sampleRate, true)
-  view.setUint32(28, byteRate, true)
-  view.setUint16(32, blockAlign, true)
-  view.setUint16(34, bitDepth, true)
-  writeStr(36, "data")
-  view.setUint32(40, dataSize, true)
-
-  let offset = 44
-  const channels: Float32Array[] = []
-  for (let c = 0; c < numChannels; c++) channels.push(buffer.getChannelData(c))
-
-  for (let i = 0; i < samples; i++) {
-    for (let c = 0; c < numChannels; c++) {
-      const sample = Math.max(-1, Math.min(1, channels[c][i]))
-      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true)
-      offset += 2
-    }
-  }
-
-  return new Blob([arrayBuffer], { type: "audio/wav" })
 }
 
 export default function FocusMusic({ locale }: { locale: Locale }) {
-  const dict = getDictionary(locale)
-  const [playing, setPlaying] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const urlRef = useRef<string | null>(null)
+  const m = getDictionary(locale).music
+  const volumeId = useId()
+  const [status, setStatus] = useState<Status>("idle")
+  const [error, setError] = useState<AudioErrorKind | null>(null)
+  const [blocked, setBlocked] = useState(false)
+  const [volume, setVolume] = useState<number>(focusAudio.defaultVolume)
+  const [muted, setMuted] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const sourceRef = useRef<AudioSource | null>(null)
+  const blockedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const errorRef = useRef<AudioErrorKind | null>(null)
+  const prefs = useRef({ volume, muted })
+  prefs.current = { volume, muted }
 
   useEffect(() => {
+    const storedVolume = Number(readStorage(STORAGE.volume))
+    if (readStorage(STORAGE.volume) !== null && Number.isFinite(storedVolume)) {
+      setVolume(Math.min(100, Math.max(0, storedVolume)))
+    }
+    setMuted(readStorage(STORAGE.muted) === "1")
+
     return () => {
-      audioRef.current?.pause()
-      if (urlRef.current) URL.revokeObjectURL(urlRef.current)
+      clearTimer(blockedTimer)
+      sourceRef.current?.destroy()
+      sourceRef.current = null
     }
   }, [])
 
-  const ensureAudio = useCallback(async () => {
-    if (audioRef.current) return audioRef.current
-    setLoading(true)
-    try {
-      const blob = await buildFocusTrack()
-      const url = URL.createObjectURL(blob)
-      urlRef.current = url
-      const audio = new Audio(url)
-      audio.loop = true
-      audio.volume = 0.55
-      audioRef.current = audio
-      return audio
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState !== "visible" || !sourceRef.current) return
+      const playing = sourceRef.current.isPlaying()
+      setStatus((current) => (current === "error" ? current : playing ? "playing" : current === "playing" ? "paused" : current))
     }
+    document.addEventListener("visibilitychange", onVisibility)
+    return () => document.removeEventListener("visibilitychange", onVisibility)
   }, [])
+
+  const fail = useCallback((kind: AudioErrorKind) => {
+    clearTimer(blockedTimer)
+    sourceRef.current?.destroy()
+    sourceRef.current = null
+    errorRef.current = kind
+    setError(kind)
+    setBlocked(false)
+    setStatus("error")
+  }, [])
+
+  const requestPlay = (source: AudioSource) => {
+    setBlocked(false)
+    setStatus("loading")
+    source.play()
+    clearTimer(blockedTimer)
+    blockedTimer.current = setTimeout(() => {
+      if (source.isPlaying()) return
+      setBlocked(true)
+      setStatus("paused")
+    }, BLOCKED_AFTER_MS)
+  }
 
   const toggle = async () => {
+    if (status === "loading" || (status === "error" && error === "unavailable")) return
+    const current = sourceRef.current
+    if (current) {
+      if (status === "playing") current.pause()
+      else requestPlay(current)
+      return
+    }
+    if (!containerRef.current) return
+
+    errorRef.current = null
     setError(null)
+    setStatus("loading")
+    let source: AudioSource | null = null
     try {
-      const audio = await ensureAudio()
-      if (playing) {
-        audio.pause()
-        setPlaying(false)
-        return
-      }
-      await audio.play()
-      setPlaying(true)
-    } catch (e) {
-      console.error(e)
-      setError(dict.music.blocked)
-      setPlaying(false)
+      source = await createFocusAudioSource(containerRef.current, {
+        onStateChange: (state) => {
+          if (state === "playing") {
+            clearTimer(blockedTimer)
+            setBlocked(false)
+            setStatus("playing")
+          } else if (state === "paused") {
+            setStatus((value) => (value === "error" ? value : "paused"))
+          } else if (state === "buffering") {
+            setStatus((value) => (value === "error" ? value : "loading"))
+          }
+        },
+        onError: fail,
+      })
+      await source.load()
+      source.setVolume(prefs.current.volume)
+      source.setMuted(prefs.current.muted)
+      sourceRef.current = source
+      requestPlay(source)
+    } catch {
+      source?.destroy()
+      fail(errorRef.current ?? "network")
     }
   }
 
+  const changeVolume = (value: number) => {
+    setVolume(value)
+    writeStorage(STORAGE.volume, String(value))
+    sourceRef.current?.setVolume(value)
+    if (muted && value > 0) toggleMute(false)
+  }
+
+  const toggleMute = (next = !muted) => {
+    setMuted(next)
+    writeStorage(STORAGE.muted, next ? "1" : "0")
+    sourceRef.current?.setMuted(next)
+  }
+
+  const playing = status === "playing"
+  const loading = status === "loading"
+  const unavailable = status === "error" && error === "unavailable"
+  const message =
+    status === "error" ? (error === "unavailable" ? m.unavailable : m.network) : blocked ? m.blocked : null
+  const silent = muted || volume === 0
+
   return (
     <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2">
-      {error ? (
-        <span role="alert" className="text-[10px] text-red-400 bg-background/80 px-2 py-1 rounded">
-          {error}
-        </span>
-      ) : null}
-      <button
-        type="button"
-        onClick={toggle}
-        disabled={loading}
-        className="inline-flex items-center gap-2.5 rounded-full border border-primary/30 bg-background/90 px-4 py-2.5 text-xs font-semibold text-champagne backdrop-blur-md shadow-[0_0_24px_hsl(168_55%_40%/0.25)] transition-all hover:border-primary/60 hover:bg-background focus-ring disabled:opacity-60"
-        aria-pressed={playing}
-        aria-label={playing ? dict.music.pause : dict.music.play}
+      <div
+        ref={containerRef}
+        aria-hidden
+        className="pointer-events-none fixed bottom-0 right-0 h-px w-px overflow-hidden opacity-0"
+      />
+
+      <p role="status" aria-live="polite" className={cn(message ? "focus-music-note" : "sr-only")}>
+        {message ?? (loading ? m.loading : "")}
+      </p>
+
+      <div
+        role="group"
+        aria-label={m.group}
+        className="flex items-center gap-1 rounded-full border border-primary/30 bg-background/90 p-1 shadow-[0_0_24px_hsl(168_55%_40%/0.25)] backdrop-blur-md"
       >
-        {playing ? (
-          <Pause className="h-4 w-4 text-primary" aria-hidden />
-        ) : (
-          <Play className="h-4 w-4 text-primary" aria-hidden />
-        )}
-        <span aria-hidden>{loading ? dict.music.preparing : playing ? dict.music.on : dict.music.off}</span>
-      </button>
+        <button
+          type="button"
+          onClick={toggle}
+          disabled={unavailable}
+          aria-pressed={playing}
+          aria-busy={loading}
+          aria-label={playing ? m.pause : m.play}
+          className="inline-flex h-10 items-center gap-2.5 rounded-full px-3.5 text-xs font-semibold text-champagne transition-colors hover:bg-white/[0.05] focus-ring disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden />
+          ) : playing ? (
+            <Pause className="h-4 w-4 text-primary" aria-hidden />
+          ) : (
+            <Play className="h-4 w-4 text-primary" aria-hidden />
+          )}
+          <span>{m.label}</span>
+          {playing ? (
+            <span className="equalizer" aria-hidden>
+              <span />
+              <span />
+              <span />
+              <span />
+            </span>
+          ) : null}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => toggleMute()}
+          aria-pressed={muted}
+          aria-label={muted ? m.unmute : m.mute}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-white/[0.05] hover:text-champagne focus-ring"
+        >
+          {silent ? <VolumeX className="h-4 w-4" aria-hidden /> : <Volume2 className="h-4 w-4" aria-hidden />}
+        </button>
+
+        <label htmlFor={volumeId} className="sr-only">
+          {m.volume}
+        </label>
+        <input
+          id={volumeId}
+          type="range"
+          min={0}
+          max={100}
+          step={5}
+          value={volume}
+          aria-valuetext={`${volume} %`}
+          onChange={(event) => changeVolume(Number(event.target.value))}
+          className="focus-music-volume mr-3 w-16 sm:w-24"
+        />
+      </div>
     </div>
   )
 }
