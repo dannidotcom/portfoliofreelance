@@ -1,0 +1,51 @@
+export const meta = {
+  title: "De l'ETL à la vectorisation : pipeline de bout en bout",
+  summary: "Les étapes d'un pipeline qui transforme des données brutes en index vectoriel exploitable par un RAG, et les points de vigilance à chaque étape.",
+  date: "TODO",
+  draft: true,
+  tags: ["Data Engineering", "ETL", "Embeddings"],
+}
+
+## Vue d'ensemble
+
+- Sources → ingestion → transformation → découpage → embeddings → stockage → serving
+- Chaque étape doit pouvoir être rejouée sans effet de bord
+
+## Ingestion
+
+- Sources relationnelles (MySQL, PostgreSQL) et web
+- Extraction incrémentale : curseur de date ou identifiant, plutôt que des rechargements complets
+
+## Transformation
+
+- Nettoyage, normalisation, déduplication
+- Métadonnées conservées : source, date, droits d'accès, tenant
+
+## Découpage (chunking)
+
+- Taille et chevauchement adaptés au modèle d'embedding
+- Respecter la structure du document (titres, sections, tableaux)
+
+## Embeddings
+
+- Version du modèle stockée avec chaque vecteur
+- Traitement par lots et hash du contenu pour éviter les recalculs
+
+## Stockage
+
+- Base vectorielle pour la recherche, base relationnelle pour la source de vérité
+- Clé commune entre les deux pour relier un passage à son document
+
+## Orchestration et reprise
+
+- Tâches idempotentes, reprise sur erreur
+- Re-vectorisation planifiée lors d'un changement de modèle
+
+## Qualité et observabilité
+
+- Comptages entre étapes, contrôles de schéma
+- Suivi de la fraîcheur des données indexées
+
+## À compléter
+
+- Outils retenus et retour d'expérience (TODO)

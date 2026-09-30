@@ -10,7 +10,7 @@ import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { localePath, stripLocale } from "@/lib/i18n"
 
-export default function Header({ locale }: { locale: Locale }) {
+export default function Header({ locale, showNotes = false }: { locale: Locale; showNotes?: boolean }) {
   const dict = getDictionary(locale)
   const pathname = usePathname() ?? "/"
   const [open, setOpen] = useState(false)
@@ -22,6 +22,7 @@ export default function Header({ locale }: { locale: Locale }) {
     { href: `${home}#projects`, label: dict.nav.projects },
     { href: `${home}#skills`, label: dict.nav.skills },
     { href: `${home}#experience`, label: dict.nav.experience },
+    ...(showNotes ? [{ href: localePath(locale, "/notes"), label: dict.nav.notes }] : []),
     { href: `${home}#about`, label: dict.nav.about },
   ]
 
