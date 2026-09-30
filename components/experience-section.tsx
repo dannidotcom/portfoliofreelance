@@ -9,7 +9,7 @@ import { Reveal, SectionHeading } from "@/components/reveal"
 import { cn } from "@/lib/utils"
 import { formatMonth } from "@/lib/i18n"
 
-export default function ExperienceSection({ locale }: { locale: Locale }) {
+export default function ExperienceSection({ locale, index: sectionIndex = "06" }: { locale: Locale; index?: string }) {
   const dict = getDictionary(locale)
   const [expanded, setExpanded] = useState<string | null>(experiences[0]?.id ?? null)
 
@@ -18,7 +18,7 @@ export default function ExperienceSection({ locale }: { locale: Locale }) {
       <div className="container">
         <Reveal>
           <SectionHeading
-            index="05"
+            index={sectionIndex}
             eyebrow={dict.experience.eyebrow}
             title={dict.experience.title}
             description={dict.experience.description}

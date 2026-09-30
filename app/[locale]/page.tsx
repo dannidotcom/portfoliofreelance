@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import HeroSection from "@/components/hero-section"
 import FocusSection from "@/components/focus-section"
 import FeaturedProject from "@/components/featured-project"
+import ArchitectureSection from "@/components/architecture-section"
 import ProjectsSection from "@/components/projects-section"
 import SkillsSection from "@/components/skills-section"
 import ExperienceSection from "@/components/experience-section"
@@ -20,12 +21,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <HeroSection locale={locale} />
       <FocusSection locale={locale} />
       <FeaturedProject locale={locale} />
-      <ProjectsSection locale={locale} />
-      <SkillsSection locale={locale} />
-      <ExperienceSection locale={locale} />
-      <EngineeringSection locale={locale} />
-      <AboutSection locale={locale} />
-      <ContactSection locale={locale} />
+      <ArchitectureSection locale={locale} index="03" />
+      <ProjectsSection locale={locale} index="04" />
+      <SkillsSection locale={locale} index="05" />
+      <ExperienceSection locale={locale} index="06" />
+      <EngineeringSection locale={locale} index="07" />
+      <AboutSection locale={locale} index="08" />
+      <ContactSection locale={locale} index="09" />
       <FocusMusic locale={locale} />
     </main>
   )

@@ -162,4 +162,14 @@ html {
   .text-balance {
     text-wrap: balance;
   }
+
+  .diagram-flow {
+    animation: diagram-flow 0.9s linear infinite;
+  }
+}
+
+@keyframes diagram-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
 }

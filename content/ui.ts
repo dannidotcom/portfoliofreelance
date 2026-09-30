@@ -56,6 +56,18 @@ const fr = {
     year: "Année",
     stack: "Stack",
   },
+  architecture: {
+    eyebrow: "Data & AI Architecture",
+    title: "Comment je conçois les systèmes",
+    description:
+      "Deux architectures types, de l'ingestion au serving LLM. Survolez ou parcourez les blocs au clavier pour le détail, puis lisez les décisions et leurs compromis.",
+    hint: "Survol ou Tab pour le détail de chaque bloc, Échap pour fermer.",
+    decisions: "Décisions d'architecture",
+    context: "Contexte",
+    decision: "Décision",
+    tradeoffs: "Compromis",
+    toValidate: "à valider",
+  },
   projects: {
     eyebrow: "Projets",
     title: "Projets sélectionnés",
@@ -192,6 +204,18 @@ const en: Dictionary = {
     status: "Status",
     year: "Year",
     stack: "Stack",
+  },
+  architecture: {
+    eyebrow: "Data & AI Architecture",
+    title: "How I design systems",
+    description:
+      "Two reference architectures, from ingestion to LLM serving. Hover or tab through the blocks for details, then read the decisions and their trade-offs.",
+    hint: "Hover or Tab for each block's details, Esc to close.",
+    decisions: "Architecture decisions",
+    context: "Context",
+    decision: "Decision",
+    tradeoffs: "Trade-offs",
+    toValidate: "to validate",
   },
   projects: {
     eyebrow: "Projects",
