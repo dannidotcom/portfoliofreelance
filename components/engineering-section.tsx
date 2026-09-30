@@ -2,6 +2,7 @@ import { engineeringSteps } from "@/content/skills"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
+import EngineeringFlow from "@/components/engineering/engineering-flow"
 
 export default function EngineeringSection({ locale, index = "06" }: { locale: Locale; index?: string }) {
   const dict = getDictionary(locale)
@@ -27,27 +28,10 @@ export default function EngineeringSection({ locale, index = "06" }: { locale: L
         </Reveal>
 
         <Reveal delay={0.08}>
-          <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
-            {engineeringSteps.map((step, i) => (
-              <li key={step.label.en} className="relative group">
-                <div className="panel h-full p-4 lg:p-3.5 transition-colors duration-300 group-hover:bg-white/[0.04]">
-                  <span className="font-mono text-[10px] text-accent-steel" aria-hidden>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="mt-2.5 font-display text-sm font-semibold text-champagne">{step.label[locale]}</h3>
-                  <p className="mt-1.5 text-[11px] text-muted-foreground leading-snug">{step.detail[locale]}</p>
-                </div>
-                {i < engineeringSteps.length - 1 ? (
-                  <span
-                    className="hidden lg:block absolute -right-1.5 top-1/2 -translate-y-1/2 z-10 text-primary/40 text-xs"
-                    aria-hidden
-                  >
-                    →
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ol>
+          <EngineeringFlow
+            locale={locale}
+            steps={engineeringSteps.map((step) => ({ label: step.label[locale], detail: step.detail[locale] }))}
+          />
         </Reveal>
       </div>
     </section>

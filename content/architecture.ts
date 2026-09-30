@@ -42,9 +42,12 @@ export type Diagram = {
   description: Localized
   width: number
   height: number
+  /** Array order is the order of the animated walkthrough. */
   nodes: DiagramNode[]
   edges: DiagramEdge[]
   adrs: Adr[]
+  /** Short legend shown when a node becomes the active step (falls back to the node subtitle). */
+  captions?: Record<string, Localized>
 }
 
 export const NODE_W = 160
@@ -184,6 +187,17 @@ export const sovereignEngineDiagram: Diagram = {
     { from: "api", to: "monitoring", fromSide: "bottom", toSide: "top", toAt: col(1) + 80, dashed: true },
     { from: "tenant", to: "monitoring", fromSide: "bottom", toSide: "right", via: [[col(2) + 80, 378]], dashed: true },
   ],
+  captions: {
+    client: { fr: "Requête de l'application métier", en: "Business application request" },
+    api: { fr: "Requête → API", en: "Request → API" },
+    tenant: { fr: "API → contrôle d'accès du tenant", en: "API → tenant access control" },
+    rag: { fr: "Requête → recherche de contexte", en: "Query → context retrieval" },
+    vector: { fr: "RAG → recherche vectorielle", en: "RAG → vector search" },
+    postgres: { fr: "RAG → données relationnelles", en: "RAG → relational data" },
+    llm: { fr: "Prompt → inférence locale", en: "Prompt → local inference" },
+    stream: { fr: "Tokens → réponse streamée", en: "Tokens → streamed answer" },
+    monitoring: { fr: "Réponse → client · traces → monitoring", en: "Answer → client · traces → monitoring" },
+  },
   adrs: [
     {
       id: "A1",
@@ -358,6 +372,16 @@ export const dataPipelineDiagram: Diagram = {
     { from: "ingestion", to: "monitoring", fromSide: "bottom", toSide: "top", toAt: col(1) + 80, dashed: true },
     { from: "transform", to: "monitoring", fromSide: "bottom", toSide: "right", via: [[col(2) + 80, 378]], dashed: true },
   ],
+  captions: {
+    sources: { fr: "Données brutes : bases et web", en: "Raw data: databases and web" },
+    ingestion: { fr: "Sources → ingestion ETL/ELT", en: "Sources → ETL/ELT ingestion" },
+    transform: { fr: "Ingestion → nettoyage Pandas", en: "Ingestion → Pandas cleaning" },
+    embed: { fr: "Contenus → embeddings", en: "Content → embeddings" },
+    vector: { fr: "Embeddings → index vectoriel", en: "Embeddings → vector index" },
+    relational: { fr: "Données propres → PostgreSQL", en: "Clean data → PostgreSQL" },
+    api: { fr: "Stockages → serving API", en: "Stores → API serving" },
+    monitoring: { fr: "Runs → logs et monitoring", en: "Runs → logs and monitoring" },
+  },
   adrs: [
     {
       id: "B1",
