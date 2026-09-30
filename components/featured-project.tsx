@@ -1,4 +1,8 @@
+import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 import { featuredProject as featured } from "@/content/projects"
+import { localePath } from "@/lib/i18n"
+import { caseStudyPath } from "@/lib/routes"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
@@ -61,6 +65,13 @@ export default function FeaturedProject({ locale }: { locale: Locale }) {
                       ))}
                     </ul>
                   </div>
+                ) : null}
+
+                {featured.caseStudy ? (
+                  <Link href={localePath(locale, caseStudyPath(featured.slug))} className="btn-primary">
+                    {dict.projects.caseStudy}
+                    <ArrowUpRight className="h-4 w-4" aria-hidden />
+                  </Link>
                 ) : null}
               </div>
 

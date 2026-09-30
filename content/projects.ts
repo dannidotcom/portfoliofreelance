@@ -1,6 +1,35 @@
-import { TODO, type Localized, type Todo } from "./types"
+import {
+  juribotDiagram,
+  scrapingAgentDiagram,
+  sovereignEngineDiagram,
+  type Adr,
+  type Diagram,
+} from "./architecture"
+import { TODO, todoText, type Localized, type Todo } from "./types"
 
 export type ProjectStatus = "in-progress" | "completed" | "prototype"
+
+export type DataEntity = {
+  name: string
+  fields: string[]
+  note?: Localized
+}
+
+export type CaseMetric = {
+  label: Localized
+  value: string | Todo
+}
+
+export type CaseStudy = {
+  context: Localized
+  constraints: Localized[]
+  diagram: Diagram
+  /** Entities of the data model — TODO until provided. */
+  dataModel: DataEntity[] | Todo
+  decisions: Adr[]
+  metrics: CaseMetric[]
+  nextSteps: Localized[]
+}
 
 export type Project = {
   slug: string
@@ -27,6 +56,7 @@ export type Project = {
   demoUrl: string | Todo
   status: ProjectStatus
   year: string
+  caseStudy?: CaseStudy
 }
 
 export const projects: Project[] = [
@@ -97,6 +127,39 @@ export const projects: Project[] = [
     demoUrl: "",
     status: "in-progress",
     year: "2026",
+    caseStudy: {
+      context: {
+        fr: "Contribution, en tant qu'AI Engineer, à un moteur d'IA auto-hébergé intégré à un logiciel métier utilisé en environnement réglementé. Les utilisateurs ont besoin d'une assistance IA, mais les données sensibles ne peuvent pas être envoyées à des services cloud externes.",
+        en: "Contribution, as an AI Engineer, to a self-hosted AI engine integrated into business software used in regulated environments. Users need AI assistance, but sensitive data cannot be sent to external cloud services.",
+      },
+      constraints: [
+        {
+          fr: "Souveraineté : aucune donnée métier ne quitte l'infrastructure (inférence et stockage on-premise).",
+          en: "Sovereignty: no business data leaves the infrastructure (on-premise inference and storage).",
+        },
+        {
+          fr: "Multi-tenant : isolation stricte des données et contrôles d'accès entre clients.",
+          en: "Multi-tenant: strict data isolation and access control between customers.",
+        },
+        {
+          fr: "Sécurité et conformité : authentification, isolation et intégration à un logiciel existant.",
+          en: "Security and compliance: authentication, isolation and integration into existing software.",
+        },
+        {
+          fr: "Expérience : réponses streamées pour limiter la latence perçue.",
+          en: "Experience: streamed answers to limit perceived latency.",
+        },
+      ],
+      diagram: sovereignEngineDiagram,
+      dataModel: TODO,
+      decisions: sovereignEngineDiagram.adrs,
+      metrics: [
+        { label: { fr: "Latence au premier token", en: "Time to first token" }, value: TODO },
+        { label: { fr: "Documents indexés", en: "Documents indexed" }, value: TODO },
+        { label: { fr: "Tenants servis", en: "Tenants served" }, value: TODO },
+      ],
+      nextSteps: [todoText, todoText, todoText],
+    },
   },
   {
     slug: "juribot",
@@ -141,6 +204,28 @@ export const projects: Project[] = [
     demoUrl: "",
     status: "completed",
     year: "2024",
+    caseStudy: {
+      context: {
+        fr: "Rendre le droit accessible à Madagascar : un public large doit pouvoir poser des questions juridiques en malgache ou en français et obtenir une réponse compréhensible.",
+        en: "Make the law accessible in Madagascar: a broad audience must be able to ask legal questions in Malagasy or French and get an understandable answer.",
+      },
+      constraints: [
+        { fr: "Deux langues : malgache et français.", en: "Two languages: Malagasy and French." },
+        {
+          fr: "Public non spécialiste : les réponses doivent rester compréhensibles.",
+          en: "Non-specialist audience: answers must remain understandable.",
+        },
+        { fr: "Projet mené en solo, du backend à l'interface.", en: "Solo project, from backend to interface." },
+      ],
+      diagram: juribotDiagram,
+      dataModel: TODO,
+      decisions: [],
+      metrics: [
+        { label: { fr: "Utilisateurs", en: "Users" }, value: TODO },
+        { label: { fr: "Questions traitées", en: "Questions answered" }, value: TODO },
+      ],
+      nextSteps: [todoText, todoText],
+    },
   },
   {
     slug: "ai-recruteur",
@@ -218,6 +303,31 @@ export const projects: Project[] = [
     demoUrl: "",
     status: "completed",
     year: "2025",
+    caseStudy: {
+      context: {
+        fr: "Mission freelance de 3 mois : collecter automatiquement du contenu web et permettre de répondre à des questions à partir de ces données, grâce à la recherche sémantique et à des agents IA.",
+        en: "Three-month freelance engagement: automatically collect web content and answer questions from that data, using semantic search and AI agents.",
+      },
+      constraints: [
+        {
+          fr: "Collecte automatisée de sources web (SeleniumBase).",
+          en: "Automated collection of web sources (SeleniumBase).",
+        },
+        {
+          fr: "Réponses contextuelles fondées sur les données collectées.",
+          en: "Contextual answers grounded in the collected data.",
+        },
+        { fr: "Délai de 3 mois, en solo.", en: "Three-month timeline, solo." },
+      ],
+      diagram: scrapingAgentDiagram,
+      dataModel: TODO,
+      decisions: [],
+      metrics: [
+        { label: { fr: "Pages collectées", en: "Pages collected" }, value: TODO },
+        { label: { fr: "Temps de réponse moyen", en: "Average response time" }, value: TODO },
+      ],
+      nextSteps: [todoText, todoText],
+    },
   },
   {
     slug: "odoo-erp-ai",
@@ -258,6 +368,10 @@ export const projects: Project[] = [
 ]
 
 export const featuredProject = projects.find((project) => project.featured)!
+
+export const caseStudyProjects = projects.filter(
+  (project): project is Project & { caseStudy: CaseStudy } => project.caseStudy !== undefined,
+)
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug)
