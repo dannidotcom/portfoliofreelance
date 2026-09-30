@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Pause, Play } from "lucide-react"
+import type { Locale } from "@/content/types"
+import { getDictionary } from "@/content/ui"
 
 /** Build a short looping focus track as WAV (audible, reliable on click). */
 async function buildFocusTrack(): Promise<Blob> {
@@ -122,7 +124,8 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   return new Blob([arrayBuffer], { type: "audio/wav" })
 }
 
-export default function FocusMusic() {
+export default function FocusMusic({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
   const [playing, setPlaying] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -166,24 +169,32 @@ export default function FocusMusic() {
       setPlaying(true)
     } catch (e) {
       console.error(e)
-      setError("Audio bloqué")
+      setError(dict.music.blocked)
       setPlaying(false)
     }
   }
 
   return (
     <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2">
-      {error ? <span className="text-[10px] text-red-400 bg-background/80 px-2 py-1 rounded">{error}</span> : null}
+      {error ? (
+        <span role="alert" className="text-[10px] text-red-400 bg-background/80 px-2 py-1 rounded">
+          {error}
+        </span>
+      ) : null}
       <button
         type="button"
         onClick={toggle}
         disabled={loading}
         className="inline-flex items-center gap-2.5 rounded-full border border-primary/30 bg-background/90 px-4 py-2.5 text-xs font-semibold text-champagne backdrop-blur-md shadow-[0_0_24px_hsl(168_55%_40%/0.25)] transition-all hover:border-primary/60 hover:bg-background focus-ring disabled:opacity-60"
         aria-pressed={playing}
-        aria-label={playing ? "Pause musique coding focus" : "Lire musique coding focus"}
+        aria-label={playing ? dict.music.pause : dict.music.play}
       >
-        {playing ? <Pause className="h-4 w-4 text-primary" /> : <Play className="h-4 w-4 text-primary" />}
-        <span>{loading ? "Préparation…" : playing ? "Coding focus · ON" : "▶ Lire coding focus"}</span>
+        {playing ? (
+          <Pause className="h-4 w-4 text-primary" aria-hidden />
+        ) : (
+          <Play className="h-4 w-4 text-primary" aria-hidden />
+        )}
+        <span aria-hidden>{loading ? dict.music.preparing : playing ? dict.music.on : dict.music.off}</span>
       </button>
     </div>
   )
