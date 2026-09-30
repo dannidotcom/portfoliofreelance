@@ -270,10 +270,14 @@ export default async function CaseStudyPage({ params }: { params: Params }) {
         <header className="max-w-3xl space-y-6 mb-14">
           <p className="flex flex-wrap items-center gap-3 label-caps">
             {project.category[locale]}
-            <span className="text-muted-foreground" aria-hidden>
-              ·
-            </span>
-            <span className="text-muted-foreground tracking-[0.2em]">{project.year}</span>
+            {isShown(project.year) ? (
+              <>
+                <span className="text-muted-foreground" aria-hidden>
+                  ·
+                </span>
+                <span className="text-muted-foreground tracking-[0.2em]">{project.year}</span>
+              </>
+            ) : null}
           </p>
           <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-champagne text-balance leading-[1.05]">
             {project.title[locale]}
@@ -284,13 +288,15 @@ export default async function CaseStudyPage({ params }: { params: Params }) {
               [d.role, project.role[locale]],
               [d.team, project.team[locale]],
               [d.duration, project.duration[locale]],
-              [d.status, dict.status[project.status]],
-            ].map(([label, value]) => (
-              <div key={label}>
-                <dt className="text-xs uppercase tracking-wider text-muted-foreground">{label}</dt>
-                <dd className="mt-1.5 text-champagne leading-snug">{value}</dd>
-              </div>
-            ))}
+              [d.status, isShown(project.status) ? dict.status[project.status] : ""],
+            ]
+              .filter(([, value]) => value)
+              .map(([label, value]) => (
+                <div key={label}>
+                  <dt className="text-xs uppercase tracking-wider text-muted-foreground">{label}</dt>
+                  <dd className="mt-1.5 text-champagne leading-snug">{value}</dd>
+                </div>
+              ))}
           </dl>
           {project.disclaimer ? (
             <p className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 text-xs leading-relaxed text-muted-foreground">

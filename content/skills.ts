@@ -231,6 +231,7 @@ export const candidateSkills: { area: string; items: string[] }[] = [
   { area: "Platform", items: ["Kubernetes (cv)", "GitLab CI/CD (cv)", "Terraform"] },
   { area: "ML / NLP", items: ["PyTorch (cv)", "TensorFlow (cv)", "Scikit-learn (cv)", "Sentence Transformers (cv)", "NLTK (cv)"] },
   { area: "RAG techniques", items: ["HyDE (cv)", "hybrid search (BM25 + vectors)", "reranking", "RAG evaluation (Ragas)"] },
+  { area: "LLM APIs", items: ["API key management / secrets manager", "quotas & rate limiting", "token cost tracking"] },
 ]
 
 export const engineeringSteps: { label: Localized; detail: Localized }[] = [

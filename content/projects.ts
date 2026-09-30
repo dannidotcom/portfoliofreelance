@@ -3,6 +3,7 @@ import {
   scrapingAgentDiagram,
   sovereignEngineDiagram,
   type Adr,
+  type ArchitectureTabId,
   type Diagram,
 } from "./architecture"
 import { TODO, todoText, type Localized, type Todo } from "./types"
@@ -54,8 +55,14 @@ export type Project = {
   /** "" = no public repository, TODO = to be provided. */
   githubUrl: string | Todo
   demoUrl: string | Todo
-  status: ProjectStatus
-  year: string
+  status: ProjectStatus | Todo
+  year: string | Todo
+  /** Short context shown on the project card. */
+  context?: Localized
+  /** Key facts shown on the project card; each one is hidden while its value is TODO. */
+  facts?: CaseMetric[]
+  /** Architecture tab (Data & AI Architecture section) linked from the card. */
+  architecture?: ArchitectureTabId
   caseStudy?: CaseStudy
 }
 
@@ -160,6 +167,41 @@ export const projects: Project[] = [
       ],
       nextSteps: [todoText, todoText, todoText],
     },
+  },
+  {
+    slug: "business-ai-agents-api",
+    title: { fr: "Agents IA métiers via API", en: "Business AI agents via API" },
+    featured: false,
+    category: { fr: "IA Agentique", en: "Agentic AI" },
+    summary: {
+      fr: "Agents IA métiers adossés à un fournisseur LLM externe appelé via clé API.",
+      en: "Business AI agents backed by an external LLM provider called with an API key.",
+    },
+    description: {
+      fr: "Agents IA intégrés à des applications métier et adossés à un fournisseur LLM externe appelé via clé API, selon l'architecture « IA métier via API » présentée plus haut.",
+      en: "AI agents integrated into business applications and backed by an external LLM provider called with an API key, following the “Business AI via API” architecture shown above.",
+    },
+    problem: todoText,
+    solution: todoText,
+    role: todoText,
+    technologies: ["Python", "FastAPI", "LLM"],
+    results: [],
+    images: [],
+    duration: todoText,
+    team: todoText,
+    client: todoText,
+    githubUrl: TODO,
+    demoUrl: "",
+    status: TODO,
+    year: TODO,
+    context: todoText,
+    facts: [
+      { label: { fr: "Fournisseur LLM", en: "LLM provider" }, value: TODO },
+      { label: { fr: "Coût", en: "Cost" }, value: TODO },
+      { label: { fr: "Latence", en: "Latency" }, value: TODO },
+      { label: { fr: "Volumes", en: "Volumes" }, value: TODO },
+    ],
+    architecture: "api",
   },
   {
     slug: "juribot",

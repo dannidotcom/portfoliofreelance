@@ -66,6 +66,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       "Data pipelines",
       "RAG",
       "LLM",
+      "LLM API",
       "FastAPI",
       "PostgreSQL",
       "Qdrant",

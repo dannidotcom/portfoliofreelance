@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
-import { ArrowUpRight, ExternalLink, Github, X } from "lucide-react"
+import { ArrowUpRight, ExternalLink, Github, Network, X } from "lucide-react"
+import { architectureTabAnchor } from "@/content/architecture"
 import { projects, type ProjectStatus } from "@/content/projects"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
@@ -10,7 +11,7 @@ import { Reveal, SectionHeading } from "@/components/reveal"
 import { cn } from "@/lib/utils"
 import { localePath } from "@/lib/i18n"
 import { caseStudyPath } from "@/lib/routes"
-import { isShown } from "@/lib/todo"
+import { isShown, shown } from "@/lib/todo"
 
 const STATUS_STYLE: Record<ProjectStatus, string> = {
   "in-progress": "border-primary/40 bg-primary/10 text-accent-steel",
@@ -69,6 +70,7 @@ export default function ProjectsSection({ locale, index: sectionIndex = "04" }: 
               const github = project.githubUrl && isShown(project.githubUrl) ? project.githubUrl : null
               const demo = project.demoUrl && isShown(project.demoUrl) ? project.demoUrl : null
               const caseHref = project.caseStudy ? localePath(locale, caseStudyPath(project.slug)) : null
+              const facts = shown(project.facts ?? [], (fact) => fact.value)
               return (
                 <li key={project.slug} id={`project-${project.slug}`} className="scroll-mt-24">
                   <Reveal delay={i * 0.04} className="h-full">
@@ -79,10 +81,14 @@ export default function ProjectsSection({ locale, index: sectionIndex = "04" }: 
                       )}
                     >
                       <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="font-mono text-muted-foreground">{project.year}</span>
-                        <span className={cn("rounded-full border px-2.5 py-0.5", STATUS_STYLE[project.status])}>
-                          {dict.status[project.status]}
-                        </span>
+                        {isShown(project.year) ? (
+                          <span className="font-mono text-muted-foreground">{project.year}</span>
+                        ) : null}
+                        {isShown(project.status) ? (
+                          <span className={cn("rounded-full border px-2.5 py-0.5", STATUS_STYLE[project.status])}>
+                            {dict.status[project.status]}
+                          </span>
+                        ) : null}
                         {project.featured ? (
                           <span className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-0.5 uppercase tracking-wider text-[10px] text-accent-steel">
                             {dict.projects.featuredBadge}
@@ -101,10 +107,28 @@ export default function ProjectsSection({ locale, index: sectionIndex = "04" }: 
                         )}
                       </h3>
                       <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{project.description[locale]}</p>
-                      <p className="mt-3 text-xs text-muted-foreground">
-                        <span className="text-foreground/80">{dict.projects.role} · </span>
-                        {project.role[locale]}
-                      </p>
+                      {project.context && isShown(project.context) ? (
+                        <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                          <span className="text-foreground/80">{dict.projects.context} · </span>
+                          {project.context[locale]}
+                        </p>
+                      ) : null}
+                      {isShown(project.role) ? (
+                        <p className="mt-3 text-xs text-muted-foreground">
+                          <span className="text-foreground/80">{dict.projects.role} · </span>
+                          {project.role[locale]}
+                        </p>
+                      ) : null}
+                      {facts.length ? (
+                        <dl aria-label={dict.projects.facts} className="mt-4 grid grid-cols-2 gap-3 text-xs">
+                          {facts.map((fact) => (
+                            <div key={fact.label.en} className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+                              <dt className="text-muted-foreground">{fact.label[locale]}</dt>
+                              <dd className="mt-0.5 font-medium text-champagne">{fact.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      ) : null}
 
                       <ul aria-label={dict.projects.filterLabel} className="mt-5 flex flex-wrap gap-2">
                         {project.technologies.map((tech) => (
@@ -133,6 +157,15 @@ export default function ProjectsSection({ locale, index: sectionIndex = "04" }: 
                             {dict.projects.caseStudy}
                             <ArrowUpRight className="h-4 w-4" aria-hidden />
                           </Link>
+                        ) : null}
+                        {project.architecture ? (
+                          <a
+                            href={`#${architectureTabAnchor(project.architecture)}`}
+                            className="inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-accent-steel hover:text-champagne transition-colors focus-ring"
+                          >
+                            <Network className="h-4 w-4" aria-hidden />
+                            {dict.projects.architecture}
+                          </a>
                         ) : null}
                         {github ? (
                           <a
