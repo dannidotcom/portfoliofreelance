@@ -3,7 +3,7 @@ import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { Reveal, SectionHeading } from "@/components/reveal"
 
-export default function SkillsSection({ locale }: { locale: Locale }) {
+export default function SkillsSection({ locale, index: sectionIndex = "05" }: { locale: Locale; index?: string }) {
   const dict = getDictionary(locale)
 
   return (
@@ -19,7 +19,7 @@ export default function SkillsSection({ locale }: { locale: Locale }) {
       <div className="container relative">
         <Reveal>
           <SectionHeading
-            index="04"
+            index={sectionIndex}
             eyebrow={dict.skills.eyebrow}
             title={dict.skills.title}
             description={dict.skills.description}

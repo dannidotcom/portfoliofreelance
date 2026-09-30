@@ -11,6 +11,7 @@ export default function Footer({ locale }: { locale: Locale }) {
   const home = localePath(locale)
 
   const links: [string, string][] = [
+    [`${home}#architecture`, dict.nav.architecture],
     [`${home}#projects`, dict.nav.projects],
     [`${home}#skills`, dict.nav.skills],
     [`${home}#experience`, dict.nav.experience],

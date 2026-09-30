@@ -18,6 +18,7 @@ export default function Header({ locale }: { locale: Locale }) {
 
   const home = localePath(locale)
   const navItems = [
+    { href: `${home}#architecture`, label: dict.nav.architecture },
     { href: `${home}#projects`, label: dict.nav.projects },
     { href: `${home}#skills`, label: dict.nav.skills },
     { href: `${home}#experience`, label: dict.nav.experience },

@@ -10,7 +10,7 @@ import { Reveal, SectionHeading } from "@/components/reveal"
 import { cn } from "@/lib/utils"
 import { isShown } from "@/lib/todo"
 
-export default function ProjectsSection({ locale }: { locale: Locale }) {
+export default function ProjectsSection({ locale, index: sectionIndex = "04" }: { locale: Locale; index?: string }) {
   const dict = getDictionary(locale)
   const [activeSlug, setActiveSlug] = useState<string | null>(projects[0]?.slug ?? null)
 
@@ -19,7 +19,7 @@ export default function ProjectsSection({ locale }: { locale: Locale }) {
       <div className="container">
         <Reveal>
           <SectionHeading
-            index="03"
+            index={sectionIndex}
             eyebrow={dict.projects.eyebrow}
             title={dict.projects.title}
             description={dict.projects.description}
