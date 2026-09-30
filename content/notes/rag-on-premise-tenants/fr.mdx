@@ -1,0 +1,51 @@
+export const meta = {
+  title: "RAG on-premise : isoler les tenants",
+  summary: "Où et comment appliquer l'isolation multi-tenant dans une chaîne RAG auto-hébergée : retrieval, stockage, caches et tests.",
+  date: "TODO",
+  draft: true,
+  tags: ["RAG", "Multi-tenant", "Sécurité"],
+}
+
+## Pourquoi l'isolation est le vrai sujet
+
+- Le risque principal n'est pas le modèle : c'est un passage récupéré chez le mauvais tenant
+- Vecteurs de fuite : retrieval, caches, logs, traces, fichiers sources
+- Contraintes on-premise : pas de service managé, ressources GPU partagées entre tenants
+
+## Modèles d'isolation
+
+### Une collection par tenant
+
+- Isolation forte et suppression simple
+- Coût opérationnel qui croît avec le nombre de tenants
+
+### Collection partagée et filtre sur le payload
+
+- Champ `tenant_id` indexé, filtre obligatoire à chaque requête
+- Plus économique, mais une requête sans filtre devient une fuite
+
+### Une base ou une instance par tenant
+
+- Pour les exigences réglementaires les plus strictes
+- Coût et exploitation à arbitrer
+
+## Où appliquer le filtre
+
+- L'identité du tenant vient du jeton (JWT), jamais du corps de la requête
+- Le filtre est imposé dans la couche retrieval, pas dans le prompt
+- Côté relationnel : Row-Level Security PostgreSQL comme filet de sécurité
+
+## Au-delà du vector store
+
+- Clés de cache préfixées par le tenant
+- Logs et traces sans contenu documentaire en clair
+- Stockage des fichiers sources cloisonné
+
+## Tester l'isolation
+
+- Tests automatisés cross-tenant sur chaque endpoint de recherche
+- Documents « canari » propres à chaque tenant pour détecter une fuite
+
+## À compléter
+
+- Retour d'expérience et choix retenu (TODO)

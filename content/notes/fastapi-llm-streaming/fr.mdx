@@ -1,0 +1,49 @@
+export const meta = {
+  title: "Streamer des réponses LLM avec FastAPI",
+  summary: "Diffuser les tokens au fil de l'eau avec FastAPI : choix du protocole, implémentation, annulation, infrastructure et mesure.",
+  date: "TODO",
+  draft: true,
+  tags: ["FastAPI", "LLM", "Streaming"],
+}
+
+## Pourquoi streamer
+
+- Le premier token arrive vite, même si la réponse complète est longue
+- Latence perçue plutôt que latence totale
+
+## Choisir le protocole
+
+- Server-Sent Events : simple, unidirectionnel, reconnexion native
+- WebSocket : bidirectionnel, utile pour l'interaction en temps réel
+- Réponse HTTP découpée (chunked) : minimaliste, sans format d'événement
+
+## Implémentation côté FastAPI
+
+- `StreamingResponse` alimentée par un générateur asynchrone
+- `media_type="text/event-stream"` pour SSE
+- Un événement de fin explicite pour le client
+
+## Côté client
+
+- `EventSource` pour SSE en GET
+- `fetch` et `ReadableStream` pour les requêtes POST
+
+## Erreurs et annulation
+
+- Détecter la déconnexion du client avec `request.is_disconnected()`
+- Arrêter la génération côté serveur pour libérer le GPU
+- Timeouts et message d'erreur structuré dans le flux
+
+## Infrastructure
+
+- Désactiver la mise en tampon du proxy (`X-Accel-Buffering: no` avec Nginx)
+- Timeouts de lecture adaptés aux réponses longues
+
+## Mesurer
+
+- Temps jusqu'au premier token (TTFT)
+- Débit en tokens par seconde
+
+## À compléter
+
+- Retour d'expérience et mesures (TODO)

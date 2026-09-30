@@ -6,6 +6,7 @@ import "../globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { locales, type Locale } from "@/content/types"
+import { publishedNotes } from "@/content/notes"
 import { profile, siteUrl } from "@/content/profile"
 import { getDictionary } from "@/content/ui"
 import { alternatesFor, isLocale, ogLocale } from "@/lib/i18n"
@@ -136,7 +137,7 @@ export default async function LocaleLayout({
         >
           {dict.a11y.skipToContent}
         </a>
-        <Header locale={locale} />
+        <Header locale={locale} showNotes={publishedNotes().length > 0} />
         {children}
         <Footer locale={locale} />
       </body>

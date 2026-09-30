@@ -2,7 +2,9 @@ import { Github, Linkedin, Mail } from "lucide-react"
 import { profile } from "@/content/profile"
 import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
+import { publishedNotes } from "@/content/notes"
 import { localePath } from "@/lib/i18n"
+import { notesPath } from "@/lib/routes"
 import { isShown } from "@/lib/todo"
 
 export default function Footer({ locale }: { locale: Locale }) {
@@ -15,6 +17,8 @@ export default function Footer({ locale }: { locale: Locale }) {
     [`${home}#projects`, dict.nav.projects],
     [`${home}#skills`, dict.nav.skills],
     [`${home}#experience`, dict.nav.experience],
+    [`${home}#github`, dict.nav.github],
+    ...(publishedNotes().length ? [[localePath(locale, notesPath), dict.nav.notes] as [string, string]] : []),
     [`${home}#about`, dict.nav.about],
     [`${home}#contact`, dict.nav.contact],
   ]

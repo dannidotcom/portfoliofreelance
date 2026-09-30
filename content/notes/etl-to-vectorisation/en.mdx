@@ -1,0 +1,51 @@
+export const meta = {
+  title: "From ETL to vectorisation: an end-to-end pipeline",
+  summary: "The steps of a pipeline that turns raw data into a vector index a RAG system can use, and what to watch at each step.",
+  date: "TODO",
+  draft: true,
+  tags: ["Data Engineering", "ETL", "Embeddings"],
+}
+
+## Overview
+
+- Sources → ingestion → transformation → chunking → embeddings → storage → serving
+- Every step must be replayable without side effects
+
+## Ingestion
+
+- Relational (MySQL, PostgreSQL) and web sources
+- Incremental extraction: date or id cursor rather than full reloads
+
+## Transformation
+
+- Cleaning, normalisation, deduplication
+- Metadata kept: source, date, access rights, tenant
+
+## Chunking
+
+- Size and overlap suited to the embedding model
+- Respect the document structure (headings, sections, tables)
+
+## Embeddings
+
+- Model version stored with every vector
+- Batch processing and content hashing to avoid recomputation
+
+## Storage
+
+- Vector database for search, relational database as the source of truth
+- Shared key between both to link a passage to its document
+
+## Orchestration and recovery
+
+- Idempotent jobs, retry on failure
+- Scheduled re-vectorisation when the model changes
+
+## Quality and observability
+
+- Counts between steps, schema checks
+- Tracking the freshness of indexed data
+
+## To be completed
+
+- Chosen tools and lessons learned (TODO)

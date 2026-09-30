@@ -1,0 +1,51 @@
+export const meta = {
+  title: "On-premise RAG: isolating tenants",
+  summary: "Where and how to enforce multi-tenant isolation in a self-hosted RAG chain: retrieval, storage, caches and tests.",
+  date: "TODO",
+  draft: true,
+  tags: ["RAG", "Multi-tenant", "Security"],
+}
+
+## Why isolation is the real problem
+
+- The main risk is not the model: it is a passage retrieved from the wrong tenant
+- Leak vectors: retrieval, caches, logs, traces, source files
+- On-premise constraints: no managed service, GPU resources shared between tenants
+
+## Isolation models
+
+### One collection per tenant
+
+- Strong isolation and simple deletion
+- Operational cost grows with the number of tenants
+
+### Shared collection with a payload filter
+
+- Indexed `tenant_id` field, mandatory filter on every query
+- Cheaper, but a query without a filter becomes a leak
+
+### One database or instance per tenant
+
+- For the strictest regulatory requirements
+- Cost and operations to weigh
+
+## Where to enforce the filter
+
+- The tenant identity comes from the token (JWT), never from the request body
+- The filter is enforced in the retrieval layer, not in the prompt
+- Relational side: PostgreSQL Row-Level Security as a safety net
+
+## Beyond the vector store
+
+- Cache keys prefixed with the tenant
+- Logs and traces without plain-text document content
+- Isolated storage for source files
+
+## Testing isolation
+
+- Automated cross-tenant tests on every search endpoint
+- Per-tenant "canary" documents to detect a leak
+
+## To be completed
+
+- Lessons learned and chosen approach (TODO)
