@@ -11,6 +11,7 @@ import type { Locale } from "@/content/types"
 import { getDictionary } from "@/content/ui"
 import { localePath, stripLocale } from "@/lib/i18n"
 import type { PaletteProject } from "@/components/command-palette"
+import LanguageSwitcher from "@/components/language-switcher"
 
 const CommandPalette = dynamic(() => import("@/components/command-palette"), { ssr: false })
 
@@ -70,8 +71,8 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
     { href: `${home}#about`, label: dict.nav.about },
   ]
 
-  const otherLocale: Locale = locale === "fr" ? "en" : "fr"
-  const switchHref = localePath(otherLocale, stripLocale(pathname))
+  const path = stripLocale(pathname)
+  const localeHrefs = { fr: localePath("fr", path), en: localePath("en", path) } satisfies Record<Locale, string>
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -86,21 +87,6 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
       document.body.style.overflow = ""
     }
   }, [open])
-
-  const languageSwitch = (
-    <Link
-      href={switchHref}
-      hrefLang={otherLocale}
-      lang={otherLocale}
-      className="inline-flex h-9 items-center gap-1 rounded-full border border-white/10 px-3 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:border-white/20 hover:text-champagne focus-ring"
-      onClick={() => setOpen(false)}
-    >
-      <span className={cn(locale === "fr" && "text-champagne")}>FR</span>
-      <span>/</span>
-      <span className={cn(locale === "en" && "text-champagne")}>EN</span>
-      <span className="sr-only"> — {dict.a11y.switchTo}</span>
-    </Link>
-  )
 
   const paletteTrigger = (
     <button
@@ -148,7 +134,7 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
               </a>
             ))}
             <span className="ml-2">{paletteTrigger}</span>
-            <span className="ml-2">{languageSwitch}</span>
+            <LanguageSwitcher locale={locale} className="ml-2" />
             <a href={`${home}#contact`} className="btn-primary ml-3 !py-2 !px-4 text-[13px]">
               {dict.cta.contact}
             </a>
@@ -156,7 +142,6 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
 
           <div className="flex items-center gap-2 lg:hidden">
             {paletteTrigger}
-            {languageSwitch}
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-foreground focus-ring"
@@ -174,7 +159,7 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
           id="mobile-nav"
           className={cn(
             "lg:hidden overflow-hidden border-t border-white/[0.06] bg-background/95 backdrop-blur-xl transition-[max-height,opacity] duration-300",
-            open ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0 border-t-0 pointer-events-none invisible",
+            open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 border-t-0 pointer-events-none invisible",
           )}
         >
           <nav aria-label={dict.a11y.mainNav} className="container flex flex-col gap-1 py-5">
@@ -188,6 +173,12 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
                 {item.label}
               </a>
             ))}
+            <div className="mt-2 flex items-center justify-between rounded-xl px-4 py-2">
+              <span className="text-sm text-muted-foreground" aria-hidden>
+                {dict.a11y.language}
+              </span>
+              <LanguageSwitcher locale={locale} onNavigate={() => setOpen(false)} />
+            </div>
             <a href={`${home}#contact`} onClick={() => setOpen(false)} className="btn-primary mt-3 justify-center">
               {dict.cta.contact}
             </a>
@@ -201,7 +192,7 @@ export default function Header({ locale, showNotes = false, palette }: Props) {
           open={paletteOpen}
           onOpenChange={setPaletteOpen}
           home={home}
-          switchHref={switchHref}
+          localeHrefs={localeHrefs}
           cv={palette.cv}
           email={profile.email}
           githubUrl={profile.github}
